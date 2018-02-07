@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Илья Филиппов](https://up.htmlacademy.ru/nodejs/1/user/157558).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Бренчев](https://up.htmlacademy.ru/nodejs/1/user/59895).
 
 ---
 

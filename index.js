@@ -20,6 +20,11 @@ Accessible options:
         text: '0.1.0',
         type: 'log',
       };
+    case undefined:
+      return {
+        text: `No options. To get list of possible options type '--help'.`,
+        type: 'error',
+      };
     default:
       return {
         text: `Bad option: ${firstOption}. To get list of possible options type '--help'.`,
@@ -35,9 +40,9 @@ const showMessage = (message) => {
   }
   if (message.type === 'error') {
     console.error(message.text);
-    return;
+    process.exit(1);
   }
-  return 'Message type uknown.';
+  return 'Message type unknown.';
 }
 
 showMessage(getMessage(getOptions()));

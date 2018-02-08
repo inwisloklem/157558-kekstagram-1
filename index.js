@@ -32,7 +32,6 @@ Accessible options:
 const showMessage = (message) => {
   if (message.type === 'log') {
     console.log(message.text);
-    process.exit(0);
   }
   if (message.type === 'error') {
     console.error(message.text);

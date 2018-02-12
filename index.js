@@ -8,24 +8,18 @@ const commandsList = [
   require(`./src/version.js`),
 ];
 
-const head = ([x]) => x;
-
-const getOptionsOrDefault = (options) => {
+const getOption = (options) => {
   if (options.length > 2) {
-    return options.slice(2);
+    return options[2].slice(2);
   }
-  return [`--help`];
+  return `help`;
 };
-
-const getCommandName = (args) => args.slice(2);
-
-const getCurrentCommand = pipe(getOptionsOrDefault, head, getCommandName);
 
 const byName = (name) => (command) =>
   command.name === name;
 
 const findCommandByName = (cliArguments) => (commands) =>
-  commands.find(byName(getCurrentCommand(cliArguments)));
+  commands.find(byName(getOption(cliArguments)));
 
 const executeCommand = (command) => {
   try {

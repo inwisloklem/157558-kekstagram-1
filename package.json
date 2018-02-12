@@ -1,0 +1,16 @@
+{
+  "name": "kekstagram",
+  "version": "0.1.0",
+  "description": "Kekstagram project",
+  "main": "index.js",
+  "scripts": {
+    "test:lint": "eslint .",
+    "test": "npm run test:lint"
+  },
+  "author": "inwisloklem <89099109104@mail.ru>",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "eslint-config-htmlacademy": "^0.4.2"
+  }
+}

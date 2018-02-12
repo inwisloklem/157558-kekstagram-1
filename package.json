@@ -4,7 +4,8 @@
   "description": "Kekstagram project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:lint": "eslint .",
+    "test": "npm run test:lint"
   },
   "author": "inwisloklem <89099109104@mail.ru>",
   "license": "ISC",

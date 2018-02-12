@@ -2,11 +2,11 @@ const MESSAGE =
 `This application does nothing yet.
 
 Accessible options:
---author      — prints author info;
---description — prints program description;
---help        — prints this info;
---license     — prints program license;
---version     — prints application version.`;
+--author      — prints author info
+--description — prints application description
+--help        — prints this info
+--license     — prints application license
+--version     — prints application version`;
 
 module.exports = {
   name: `help`,

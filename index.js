@@ -1,4 +1,7 @@
-const {pipe} = require(`./src/utils.js`);
+const {
+  byName,
+  pipe,
+} = require(`./src/utils.js`);
 
 const commandsList = [
   require(`./src/author.js`),
@@ -14,9 +17,6 @@ const getOption = (options) => {
   }
   return `help`;
 };
-
-const byName = (name) => (command) =>
-  command.name === name;
 
 const findCommandByName = (cliArguments) => (commands) =>
   commands.find(byName(getOption(cliArguments)));

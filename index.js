@@ -1,50 +1,41 @@
-const getOptions = () =>
-  process.argv.slice(2);
+const commandsList = [
+  require(`./src/author.js`),
+  require(`./src/description.js`),
+  require(`./src/help.js`),
+  require(`./src/version.js`),
+];
 
-const getMessage = (options) => {
-  const [firstOption] = options;
+const head = ([x]) => x;
 
-  const WELCOME_TEXT =
-`This application does nothing yet.
+const pipe = (...fns) =>
+  fns.reduce((f, g) => (...args) => g(f(...args)));
 
-Accessible options:
---help    — prints this info;
---version — prints application version.`;
-
-  if (typeof firstOption === `undefined`) {
-    return {
-      text: WELCOME_TEXT,
-      type: `log`,
-    };
+const getOptionsOrDefault = (options) => {
+  if (options.length > 2) {
+    return options.slice(2);
   }
-
-  switch (firstOption) {
-    case `--help`:
-      return {
-        text: WELCOME_TEXT,
-        type: `log`,
-      };
-    case `--version`:
-      return {
-        text: `0.1.0`,
-        type: `log`,
-      };
-    default:
-      return {
-        text: `Bad option: ${firstOption}. To get list of possible options type '--help'.`,
-        type: `error`,
-      };
-  }
+  return [`--help`];
 };
 
-const showMessage = (message) => {
-  if (message.type === `log`) {
-    console.log(message.text);
-  }
-  if (message.type === `error`) {
-    console.error(message.text);
+const getCommandName = (args) => args.slice(2);
+
+const getCurrentCommand = pipe(getOptionsOrDefault, head, getCommandName);
+
+const byName = (name) => (command) =>
+  command.name === name;
+
+const findCommandByName = (cliArguments) => (commands) =>
+  commands.find(byName(getCurrentCommand(cliArguments)));
+
+const executeCommand = (command) => {
+  try {
+    command.execute();
+  } catch (e) {
+    console.error(`Bad option. To get list of possible options type '--help'.`);
     process.exit(1);
   }
 };
 
-showMessage(getMessage(getOptions()));
+const runCurrentCommand = pipe(findCommandByName(process.argv), executeCommand);
+
+runCurrentCommand(commandsList);

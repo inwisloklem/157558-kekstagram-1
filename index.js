@@ -2,6 +2,7 @@ const commandsList = [
   require(`./src/author.js`),
   require(`./src/description.js`),
   require(`./src/help.js`),
+  require(`./src/license.js`),
   require(`./src/version.js`),
 ];
 
@@ -31,7 +32,7 @@ const executeCommand = (command) => {
   try {
     command.execute();
   } catch (e) {
-    console.error(`Bad option. To get list of possible options type '--help'.`);
+    console.error(`Bad option. To get list of possible options type '--help'`);
     process.exit(1);
   }
 };

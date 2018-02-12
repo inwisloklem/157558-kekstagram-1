@@ -1,3 +1,5 @@
+const {pipe} = require(`./src/utils.js`);
+
 const commandsList = [
   require(`./src/author.js`),
   require(`./src/description.js`),
@@ -7,9 +9,6 @@ const commandsList = [
 ];
 
 const head = ([x]) => x;
-
-const pipe = (...fns) =>
-  fns.reduce((f, g) => (...args) => g(f(...args)));
 
 const getOptionsOrDefault = (options) => {
   if (options.length > 2) {

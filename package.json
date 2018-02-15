@@ -10,6 +10,7 @@
   "author": "inwisloklem <89099109104@mail.ru>",
   "license": "ISC",
   "devDependencies": {
+    "colors": "^1.1.2",
     "eslint": "^4.17.0",
     "eslint-config-htmlacademy": "^0.4.2"
   }

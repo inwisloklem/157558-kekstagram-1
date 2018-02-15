@@ -1,12 +1,14 @@
+require(`colors`);
+
 const MESSAGE =
 `This application does nothing yet.
 
 Accessible options:
---author      — prints author info
---description — prints application description
---help        — prints this info
---license     — prints application license
---version     — prints application version`;
+--${`author`.grey}      — ${`prints author info`.green}
+--${`description`.grey} — ${`prints application description`.green}
+--${`help`.grey}        — ${`prints this info`.green}
+--${`license`.grey}     — ${`prints application license`.green}
+--${`version`.grey}     — ${`prints application version`.green}`;
 
 module.exports = {
   name: `help`,

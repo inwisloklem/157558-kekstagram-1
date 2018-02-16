@@ -5,13 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test:lint": "eslint .",
-    "test": "npm run test:lint"
+    "test:mocha": "mocha",
+    "test": "npm run test:lint && npm run test:mocha"
   },
   "author": "inwisloklem <89099109104@mail.ru>",
   "license": "ISC",
   "devDependencies": {
-    "colors": "^1.1.2",
     "eslint": "^4.17.0",
-    "eslint-config-htmlacademy": "^0.4.2"
+    "eslint-config-htmlacademy": "^0.4.2",
+    "mocha": "^5.0.1"
+  },
+  "dependencies": {
+    "colors": "^1.1.2"
   }
 }

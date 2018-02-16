@@ -34,7 +34,7 @@ describe(`generateEntity`, () => {
     });
   });
 
-  describe(`.hastags`, () => {
+  describe(`.hashtags`, () => {
     it(`should be array`, () => {
       assert(Array.isArray(entity.hashtags));
     });

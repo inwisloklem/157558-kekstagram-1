@@ -1,6 +1,17 @@
 const assert = require(`assert`);
 const generateEntity = require(`../src/generate-entity.js`);
-const {EFFECTS} = require(`../src/data.js`);
+
+const {
+  COMMENTS,
+  EFFECTS,
+} = require(`../src/data.js`);
+
+const {
+  eachIsInArray,
+  eachLengthIsLt,
+  eachStartsWithSymbol,
+  isUnique,
+} = require(`../src/utils.js`);
 
 describe(`generateEntity`, () => {
   let entity;
@@ -29,8 +40,8 @@ describe(`generateEntity`, () => {
   });
 
   describe(`.effect`, () => {
-    it(`should be value from EFFECTS list`, () => {
-      assert.notEqual(EFFECTS.indexOf(entity.effect), -1);
+    it(`should be from EFFECTS list`, () => {
+      assert(EFFECTS.includes(entity.effect));
     });
   });
 
@@ -41,6 +52,15 @@ describe(`generateEntity`, () => {
     it(`should contain no more than 5 elements`, () => {
       assert(entity.hashtags.length <= 5);
     });
+    it(`should contain strings that starts with #`, () => {
+      assert(eachStartsWithSymbol(entity.hashtags, `#`));
+    });
+    it(`should contain unique elements`, () => {
+      assert(isUnique(entity.hashtags));
+    });
+    it(`should contain elements less than 20 symbols each`, () => {
+      assert(eachLengthIsLt(entity.hashtags, 20));
+    });
   });
 
   describe(`.description`, () => {
@@ -49,6 +69,9 @@ describe(`generateEntity`, () => {
     });
     it(`should be no more than 140 symbols`, () => {
       assert(entity.description.length <= 140);
+    });
+    it(`should be from COMMENTS list`, () => {
+      assert(COMMENTS.includes(entity.description));
     });
   });
 
@@ -64,6 +87,12 @@ describe(`generateEntity`, () => {
   describe(`.comments`, () => {
     it(`should be array`, () => {
       assert(Array.isArray(entity.comments));
+    });
+    it(`should contain elements less than 140 symbols each`, () => {
+      assert(eachLengthIsLt(entity.comments, 140));
+    });
+    it(`should contain elements from COMMENTS list`, () => {
+      assert(eachIsInArray(entity.comments, COMMENTS));
     });
   });
 });

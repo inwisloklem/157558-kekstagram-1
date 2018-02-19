@@ -10,8 +10,10 @@ const {
   eachIsInArray,
   eachLengthIsLt,
   eachStartsWithSymbol,
-  isUnique,
+  eachIsUnique,
 } = require(`../src/utils.js`);
+
+console.log(generateEntity());
 
 describe(`generateEntity`, () => {
   let entity;
@@ -56,7 +58,7 @@ describe(`generateEntity`, () => {
       assert(eachStartsWithSymbol(entity.hashtags, `#`));
     });
     it(`should contain unique elements`, () => {
-      assert(isUnique(entity.hashtags));
+      assert(eachIsUnique(entity.hashtags));
     });
     it(`should contain elements less than 20 symbols each`, () => {
       assert(eachLengthIsLt(entity.hashtags, 20));

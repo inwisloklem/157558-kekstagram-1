@@ -2,14 +2,16 @@ const byName = (name) =>
   (array) =>
     array.name === name;
 
-const byRandom = () =>
-  0.5 - Math.random();
-
 const eachIsInArray = (array, arrayToCompare) => {
   if (array.length === 0) {
     return true;
   }
   return array.every((element) => arrayToCompare.includes(element));
+};
+
+const eachIsUnique = (array) => {
+  const unique = new Set(array);
+  return unique.size === array.length;
 };
 
 const eachLengthIsLt = (array, max) => {
@@ -32,24 +34,35 @@ const getRandomArrayElement = (array) =>
 const getRandomNumber = (min, max) =>
   Math.floor(Math.random() * ((max - min) + 1)) + min;
 
-const getRandomSubarray = (array, number) =>
-  array.sort(byRandom).slice(0, number);
+const shuffleArray = (array) => {
+  let result = [];
+  let currentArray = [...array];
 
-const isUnique = (array) =>
-  (new Set(array)).size === array.length;
+  while (currentArray.length !== 0) {
+    let ndx = Math.floor(currentArray.length * Math.random());
+    result.push(currentArray[ndx]);
+    currentArray.splice(ndx, 1);
+  }
+
+  return result;
+};
+
+const getRandomSubarray = (array, subLength) => {
+  const shuffled = shuffleArray(array);
+  return shuffled.slice(0, subLength);
+};
 
 const pipe = (...fns) =>
   fns.reduce((f, g) => (...args) => g(f(...args)));
 
 module.exports = {
   byName,
-  byRandom,
   eachIsInArray,
+  eachIsUnique,
   eachLengthIsLt,
   eachStartsWithSymbol,
   getRandomArrayElement,
   getRandomNumber,
   getRandomSubarray,
-  isUnique,
   pipe,
 };

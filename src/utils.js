@@ -5,29 +5,26 @@ const byName = (name) =>
 const byRandom = () =>
   0.5 - Math.random();
 
-const eachIsInArray = (array, arrayToCompare) =>
-  array.reduce((prev, current) => {
-    if (!arrayToCompare.includes(current)) {
-      return false;
-    }
-    return prev;
-  }, true);
+const eachIsInArray = (array, arrayToCompare) => {
+  if (array.length === 0) {
+    return true;
+  }
+  return array.every((element) => arrayToCompare.includes(element));
+};
 
-const eachLengthIsLt = (array, max) =>
-  array.reduce((prev, current) => {
-    if (current.length > max) {
-      return false;
-    }
-    return prev;
-  }, true);
+const eachLengthIsLt = (array, max) => {
+  if (array.length === 0) {
+    return true;
+  }
+  return array.every((element) => element.length < max);
+};
 
-const eachStartsWithSymbol = (array, symbol) =>
-  array.reduce((prev, current) => {
-    if (current[0] !== symbol) {
-      return false;
-    }
-    return prev;
-  }, true);
+const eachStartsWithSymbol = (array, symbol) => {
+  if (array.length === 0) {
+    return true;
+  }
+  return array.every((element) => element[0] === symbol);
+};
 
 const getRandomArrayElement = (array) =>
   array[Math.floor(Math.random() * array.length)];

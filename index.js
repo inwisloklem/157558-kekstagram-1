@@ -5,6 +5,7 @@ const {
 
 const commandsList = [
   require(`./src/author.js`),
+  require(`./src/default.js`),
   require(`./src/description.js`),
   require(`./src/help.js`),
   require(`./src/license.js`),
@@ -15,7 +16,7 @@ const getOption = (options) => {
   if (options.length > 2) {
     return options[2].slice(2);
   }
-  return `help`;
+  return `default`;
 };
 
 const findCommandByName = (cliArguments) => (commands) =>

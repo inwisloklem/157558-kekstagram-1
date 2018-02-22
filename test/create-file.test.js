@@ -3,7 +3,7 @@ const assert = require(`assert`);
 const {promisify} = require(`util`);
 const createFile = require(`../src/create-file.js`);
 
-const access = promisify(fs.access);
+const open = promisify(fs.open);
 const unlink = promisify(fs.unlink);
 
 describe(`createFile`, () => {
@@ -11,7 +11,7 @@ describe(`createFile`, () => {
 
   it(`should create file`, () => {
     createFile({filePath})
-        .then(() => access(filePath))
+        .then(() => open(filePath, `r`))
         .then(() => unlink(filePath))
         .catch((e) => assert.fail(e));
   });

@@ -1,5 +1,4 @@
 const fs = require(`fs`);
-require(`colors`);
 
 const {promisify} = require(`util`);
 const writeFile = promisify(fs.writeFile);

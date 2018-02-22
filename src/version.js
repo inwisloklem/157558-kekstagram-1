@@ -1,5 +1,4 @@
 const {version} = require(`../package.json`);
-require(`colors`);
 
 const [major, minor, patch] = version.split(`.`);
 

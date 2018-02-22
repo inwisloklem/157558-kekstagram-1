@@ -1,5 +1,3 @@
-require(`colors`);
-
 const MESSAGE =
 `This application generates data file by default.
 

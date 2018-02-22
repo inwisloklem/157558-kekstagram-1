@@ -1,3 +1,5 @@
+require(`colors`);
+
 const {
   byName,
   pipe,

@@ -2,7 +2,6 @@ const fs = require(`fs`);
 const readline = require(`readline`);
 const generateFormattedData = require(`./generate-data.js`);
 const createFile = require(`./create-file.js`);
-require(`colors`);
 
 const {promisify} = require(`util`);
 const access = promisify(fs.access);

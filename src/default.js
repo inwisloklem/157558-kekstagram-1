@@ -4,93 +4,108 @@ const generateFormattedData = require(`./generate-data.js`);
 const createFile = require(`./create-file.js`);
 
 const {promisify} = require(`util`);
-const access = promisify(fs.access);
+const open = promisify(fs.open);
 
 const rl = readline.createInterface({input: process.stdin, output: process.stdout});
 
-const withMessage = (message) => {
+const logMessage = (message) => {
   console.log(message.green);
-  process.exit(0);
 };
 
-const withError = (error) => {
+const logError = (error) => {
   console.error(error.red);
-  process.exit(1);
 };
 
-const questionGenerateData = () =>
+const createFileWith = (itemsCount, filePath) => {
+  const options = {
+    filePath,
+    data: generateFormattedData(itemsCount),
+  };
+
+  return createFile(options);
+};
+
+const askGenerateData = () =>
   new Promise((resolve, reject) => {
     const handleAnswer = (answer) => {
       if (answer.trim() === `y`) {
         resolve();
       } else {
-        reject(withMessage(`Bye-bye!`));
+        logMessage(`Bye-bye!`);
+        reject();
       }
     };
 
     rl.question(`Generate data file? (type 'y' for yes): `, handleAnswer);
   });
 
-const questionEntitiesNumber = () =>
+const askItemCount = () =>
   new Promise((resolve, reject) => {
     const handleAnswer = (answer) => {
-      const numberEntities = parseInt(answer, 10);
+      const itemsCount = parseInt(answer, 10);
 
-      if (!Number.isNaN(numberEntities)) {
-        resolve(numberEntities);
+      if (!Number.isNaN(itemsCount)) {
+        resolve(itemsCount);
       } else {
-        reject(withError(`Number, please.`));
+        logError(`Number, please.`);
+        reject();
       }
     };
 
     rl.question(`Number of entities to generate: `, handleAnswer);
   });
 
-const createFileWith = (numberEntities, filePath) => {
-  const fOptions = {
-    filePath,
-    data: generateFormattedData(numberEntities)
-  };
+const askFilePath = () =>
+  new Promise((resolve) => {
+    const handleAnswer = (fileName) => {
+      resolve(`${process.cwd()}/${fileName}.json`);
+    };
 
-  return createFile(fOptions);
-};
+    rl.question(`Enter filename w/o extension (e.g. data): `, handleAnswer);
+  });
 
-const questionRewriteFile = ({numberEntities, filePath}) =>
+const checkExist = (filePath) =>
+  open(filePath, `r`)
+      .then(() => true)
+      .catch(() => false);
+
+const askRewrite = () =>
   new Promise((resolve, reject) => {
     const handleAnswer = (answer) => {
       if (answer.trim() === `y`) {
-        createFileWith({numberEntities, filePath})
-            .then(withMessage(`File was overwritten.`));
+        resolve(true);
       } else {
-        reject(withMessage(`File left intact. Bye-bye!`));
+        logMessage(`File left intact. Bye-bye!`);
+        reject(false);
       }
     };
 
     rl.question(`Rewrite file? (type 'y' for yes): `, handleAnswer);
   });
 
-const questionFilePath = (numberEntities) =>
-  new Promise((resolve) => {
-    const handleAnswer = (fileName) => {
-      const filePath = `${process.cwd()}/${fileName}.json`;
-
-      access(filePath)
-          .then(() => questionRewriteFile({numberEntities, filePath}))
-          .catch(() => createFileWith(numberEntities, filePath)
-              .then(() => withMessage(`Task complete. File was created.`))
-              .then(() => resolve()));
-    };
-
-    rl.question(`Enter filename w/o extension (e.g. data): `, handleAnswer);
-  });
-
 module.exports = {
   name: `default`,
   description: `Generates data file`,
-  execute() {
-    questionGenerateData()
-        .then(questionEntitiesNumber)
-        .then(questionFilePath)
-        .catch(withError);
+  async execute() {
+    try {
+      await askGenerateData();
+
+      const itemsCount = await askItemCount();
+      const filePath = await askFilePath();
+      const isFileExists = await checkExist(filePath);
+
+      if (isFileExists && !await askRewrite()) {
+        process.exit(0);
+      }
+      await createFileWith(itemsCount, filePath);
+
+      const message = isFileExists ?
+        `Task complete. File was overwritten.` : `Task complete. File was created.`;
+      logMessage(message);
+
+      process.exit(0);
+    } catch (e) {
+      process.exit(1);
+    }
   }
 };

@@ -8,12 +8,17 @@ const open = promisify(fs.open);
 
 const rl = readline.createInterface({input: process.stdin, output: process.stdout});
 
-const logMessage = (message) => {
-  console.log(message.green);
-};
-
-const logError = (error) => {
-  console.error(error.red);
+const log = ({message, type}) => {
+  switch (type) {
+    case `text`:
+      console.log(message.green);
+      break;
+    case `error`:
+      console.error(message.red);
+      break;
+    default:
+      console.log(message);
+  }
 };
 
 const createFileWith = (itemsCount, filePath) => {
@@ -31,12 +36,11 @@ const askGenerateData = () =>
       if (answer.trim() === `y`) {
         resolve();
       } else {
-        logMessage(`Bye-bye!`);
-        reject();
+        reject({message: `Bye-bye!`, type: `text`});
       }
     };
 
-    rl.question(`Generate data file? (type 'y' for yes): `, handleAnswer);
+    rl.question(`Generate data file? (type 'y' for yes): `.green, handleAnswer);
   });
 
 const askItemCount = () =>
@@ -47,12 +51,11 @@ const askItemCount = () =>
       if (!Number.isNaN(itemsCount)) {
         resolve(itemsCount);
       } else {
-        logError(`Number, please.`);
-        reject();
+        reject({message: `Number, please.`, type: `error`});
       }
     };
 
-    rl.question(`Number of entities to generate: `, handleAnswer);
+    rl.question(`Number of entities to generate: `.green, handleAnswer);
   });
 
 const askFilePath = () =>
@@ -61,13 +64,15 @@ const askFilePath = () =>
       resolve(`${process.cwd()}/${fileName}.json`);
     };
 
-    rl.question(`Enter filename w/o extension (e.g. data): `, handleAnswer);
+    rl.question(`Enter filename w/o extension (e.g. data): `.green, handleAnswer);
   });
 
 const checkExist = (filePath) =>
   open(filePath, `r`)
       .then(() => true)
-      .catch(() => false);
+      .catch((e) => {
+        return (e.code === `ENOENT` ? false : e);
+      });
 
 const askRewrite = () =>
   new Promise((resolve, reject) => {
@@ -75,12 +80,11 @@ const askRewrite = () =>
       if (answer.trim() === `y`) {
         resolve(true);
       } else {
-        logMessage(`File left intact. Bye-bye!`);
-        reject(false);
+        reject({message: `File left intact. Bye-bye!`, type: `text`});
       }
     };
 
-    rl.question(`Rewrite file? (type 'y' for yes): `, handleAnswer);
+    rl.question(`Rewrite file? (type 'y' for yes): `.yellow, handleAnswer);
   });
 
 module.exports = {
@@ -95,16 +99,19 @@ module.exports = {
       const isFileExists = await checkExist(filePath);
 
       if (isFileExists && !await askRewrite()) {
-        process.exit(0);
+        return;
       }
       await createFileWith(itemsCount, filePath);
 
       const message = isFileExists ?
-        `Task complete. File was overwritten.` : `Task complete. File was created.`;
-      logMessage(message);
+        {message: `Task complete. File was overwritten.`, type: `text`} :
+        {message: `Task complete. File was created.`, type: `text`};
 
-      process.exit(0);
+      log(message);
+
+      rl.close();
     } catch (e) {
+      log(e);
       process.exit(1);
     }
   }

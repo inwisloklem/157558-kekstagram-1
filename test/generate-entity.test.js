@@ -13,8 +13,6 @@ const {
   eachIsUnique,
 } = require(`../src/utils.js`);
 
-console.log(generateEntity());
-
 describe(`generateEntity`, () => {
   let entity;
 

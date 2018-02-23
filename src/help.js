@@ -1,7 +1,5 @@
-require(`colors`);
-
 const MESSAGE =
-`This application does nothing yet.
+`This application generates data file by default.
 
 Accessible options:
 --${`author`.grey}      — ${`prints author info`.green}

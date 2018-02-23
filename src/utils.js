@@ -55,6 +55,10 @@ const getRandomSubarray = (array, subLength) => {
 const pipe = (...fns) =>
   fns.reduce((f, g) => (...args) => g(f(...args)));
 
+const partial = (fn, ...currentArgs) =>
+  (...laterArgs) =>
+    fn(...currentArgs, ...laterArgs);
+
 module.exports = {
   byName,
   eachIsInArray,
@@ -65,4 +69,5 @@ module.exports = {
   getRandomNumber,
   getRandomSubarray,
   pipe,
+  partial,
 };

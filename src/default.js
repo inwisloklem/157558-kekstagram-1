@@ -71,7 +71,7 @@ const checkExist = (filePath) =>
   open(filePath, `r`)
       .then(() => true)
       .catch((e) => {
-        return (e.code === `ENOENT` ? false : e);
+        return (e.code === `ENOENT` ? false : Promise.reject(e));
       });
 
 const askRewrite = () =>

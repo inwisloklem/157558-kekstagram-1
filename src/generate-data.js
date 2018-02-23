@@ -5,8 +5,8 @@ const {
   partial,
 } = require(`./utils.js`);
 
-const generateData = (fn, max) =>
-  Array(...Array(max)).map(fn);
+const generateData = (fn, count) =>
+  Array(...Array(count)).map(fn);
 
 const formatData = (data) =>
   JSON.stringify(data, null, 2);

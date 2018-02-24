@@ -11,6 +11,7 @@ const commandsList = [
   require(`./src/description.js`),
   require(`./src/help.js`),
   require(`./src/license.js`),
+  require(`./src/server.js`),
   require(`./src/version.js`),
 ];
 

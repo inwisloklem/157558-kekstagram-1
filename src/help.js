@@ -6,6 +6,7 @@ Accessible options:
 --${`description`.grey} — ${`prints application description`.green}
 --${`help`.grey}        — ${`prints this info`.green}
 --${`license`.grey}     — ${`prints application license`.green}
+--${`server`.grey}      — ${`starts local server`.green}
 --${`version`.grey}     — ${`prints application version`.green}`;
 
 module.exports = {

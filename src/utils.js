@@ -53,11 +53,16 @@ const getRandomSubarray = (array, subLength) => {
 };
 
 const log = ({message, type}) => {
+  const MessageType = {
+    TEXT: `text`,
+    ERROR: `error`,
+  };
+
   switch (type) {
-    case `text`:
+    case MessageType.TEXT:
       console.log(message.green);
       break;
-    case `error`:
+    case MessageType.ERROR:
       console.error(message.red);
       break;
     default:

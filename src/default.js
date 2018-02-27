@@ -2,24 +2,10 @@ const fs = require(`fs`);
 const readline = require(`readline`);
 const generateFormattedData = require(`./generate-data.js`);
 const createFile = require(`./create-file.js`);
+const {log} = require(`./utils.js`);
 
 const {promisify} = require(`util`);
 const open = promisify(fs.open);
-
-const rl = readline.createInterface({input: process.stdin, output: process.stdout});
-
-const log = ({message, type}) => {
-  switch (type) {
-    case `text`:
-      console.log(message.green);
-      break;
-    case `error`:
-      console.error(message.red);
-      break;
-    default:
-      console.log(message);
-  }
-};
 
 const createFileWith = (itemsCount, filePath) => {
   const options = {
@@ -30,7 +16,7 @@ const createFileWith = (itemsCount, filePath) => {
   return createFile(options);
 };
 
-const askGenerateData = () =>
+const askGenerateData = (line) =>
   new Promise((resolve, reject) => {
     const handleAnswer = (answer) => {
       if (answer.trim() === `y`) {
@@ -40,10 +26,10 @@ const askGenerateData = () =>
       }
     };
 
-    rl.question(`Generate data file? (type 'y' for yes): `.green, handleAnswer);
+    line.question(`Generate data file? (type 'y' for yes): `.green, handleAnswer);
   });
 
-const askItemCount = () =>
+const askItemCount = (line) =>
   new Promise((resolve, reject) => {
     const handleAnswer = (answer) => {
       const itemsCount = parseInt(answer, 10);
@@ -55,16 +41,16 @@ const askItemCount = () =>
       }
     };
 
-    rl.question(`Number of entities to generate: `.green, handleAnswer);
+    line.question(`Number of entities to generate: `.green, handleAnswer);
   });
 
-const askFilePath = () =>
+const askFilePath = (line) =>
   new Promise((resolve) => {
     const handleAnswer = (fileName) => {
       resolve(`${process.cwd()}/${fileName}.json`);
     };
 
-    rl.question(`Enter filename w/o extension (e.g. data): `.green, handleAnswer);
+    line.question(`Enter filename w/o extension (e.g. data): `.green, handleAnswer);
   });
 
 const checkExist = (filePath) =>
@@ -74,7 +60,7 @@ const checkExist = (filePath) =>
         return (e.code === `ENOENT` ? false : Promise.reject(e));
       });
 
-const askRewrite = () =>
+const askRewrite = (line) =>
   new Promise((resolve, reject) => {
     const handleAnswer = (answer) => {
       if (answer.trim() === `y`) {
@@ -84,7 +70,7 @@ const askRewrite = () =>
       }
     };
 
-    rl.question(`Rewrite file? (type 'y' for yes): `.yellow, handleAnswer);
+    line.question(`Rewrite file? (type 'y' for yes): `.yellow, handleAnswer);
   });
 
 module.exports = {
@@ -92,13 +78,15 @@ module.exports = {
   description: `Generates data file`,
   async execute() {
     try {
-      await askGenerateData();
+      const line = readline.createInterface({input: process.stdin, output: process.stdout});
 
-      const itemsCount = await askItemCount();
-      const filePath = await askFilePath();
+      await askGenerateData(line);
+
+      const itemsCount = await askItemCount(line);
+      const filePath = await askFilePath(line);
       const isFileExists = await checkExist(filePath);
 
-      if (isFileExists && !await askRewrite()) {
+      if (isFileExists && !await askRewrite(line)) {
         return;
       }
       await createFileWith(itemsCount, filePath);
@@ -109,7 +97,7 @@ module.exports = {
 
       log(message);
 
-      rl.close();
+      line.close();
     } catch (e) {
       log(e);
       process.exit(1);

@@ -19,3 +19,5 @@ build/
 
 # Сгененированные данные
 *.json
+!package.json
+!package-lock.json

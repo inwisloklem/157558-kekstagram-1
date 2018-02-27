@@ -52,6 +52,24 @@ const getRandomSubarray = (array, subLength) => {
   return shuffled.slice(0, subLength);
 };
 
+const log = ({message, type}) => {
+  const MessageType = {
+    TEXT: `text`,
+    ERROR: `error`,
+  };
+
+  switch (type) {
+    case MessageType.TEXT:
+      console.log(message.green);
+      break;
+    case MessageType.ERROR:
+      console.error(message.red);
+      break;
+    default:
+      console.log(message);
+  }
+};
+
 const pipe = (...fns) =>
   fns.reduce((f, g) => (...args) => g(f(...args)));
 
@@ -68,6 +86,7 @@ module.exports = {
   getRandomArrayElement,
   getRandomNumber,
   getRandomSubarray,
+  log,
   pipe,
   partial,
 };

@@ -4,10 +4,14 @@ const url = require(`url`);
 const path = require(`path`);
 const {promisify} = require(`util`);
 const {log} = require(`./utils.js`);
-const {SERVER_HOST, SERVER_PORT} = require(`./config.js`);
+
+const {
+  SERVER_HOST,
+  SERVER_PORT,
+} = require(`./config.js`);
 
 const stat = promisify(fs.stat);
-const readfile = promisify(fs.readFile);
+const readFile = promisify(fs.readFile);
 
 const sendFile = async (filePath, response) => {
   const mapExtToContentType = {
@@ -19,7 +23,7 @@ const sendFile = async (filePath, response) => {
     'png': `image/png`,
   };
 
-  const data = await readfile(filePath);
+  const data = await readFile(filePath);
   const fileExt = path.extname(filePath).slice(1);
 
   const contentType = mapExtToContentType[fileExt] ?
@@ -30,35 +34,36 @@ const sendFile = async (filePath, response) => {
   response.end(data);
 };
 
-const server = http.createServer((request, response) => {
-  const makeResponse = async () => {
-    try {
-      const {pathname} = url.parse(request.url);
-      const filePath = path.join(process.cwd(), `static`, pathname);
+const handleResponse = async (request, response) => {
+  try {
+    const {pathname} = url.parse(request.url);
+    const filePath = path.join(process.cwd(), `static`, pathname);
 
-      const fileStat = await stat(filePath);
+    const fileStat = await stat(filePath);
 
-      if (filePath.endsWith(`static/`)) {
-        sendFile(filePath + `index.html`, response);
-        return;
-      }
-
-      if (fileStat.isDirectory()) {
-        throw new Error(`404`);
-      }
-      sendFile(filePath, response);
-
-    } catch (e) {
-      if (e.message === `404` || e.message.startsWith(`ENOENT`)) {
-        await sendFile(`${process.cwd()}/pages/404.html`, response);
-        return;
-      }
-
-      await sendFile(`${process.cwd()}/pages/500.html`, response);
+    if (filePath.endsWith(`static${path.sep}`)) {
+      await sendFile(filePath + `index.html`, response);
+      return;
     }
-  };
 
-  makeResponse();
+    if (fileStat.isDirectory()) {
+      throw new Error(`404`);
+    }
+    await sendFile(filePath, response);
+
+  } catch (e) {
+    if (e.message === `404` || e.message.startsWith(`ENOENT`)) {
+      await sendFile(`${process.cwd()}/pages/404.html`, response);
+      return;
+    }
+
+    await sendFile(`${process.cwd()}/pages/500.html`, response);
+  }
+};
+
+const server = http.createServer((request, response) => {
+  handleResponse(request, response)
+      .catch((e) => log({message: `Error occured: ${e}`, type: `error`}));
 });
 
 module.exports = {

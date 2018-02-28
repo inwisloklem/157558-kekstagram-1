@@ -48,13 +48,13 @@ describe(`GET /api/posts/:date`, () => {
         .expect(200)
         .expect(`Content-Type`, /json/)
         .then((response) => {
-          assert.deepEqual(response.body, dbMock.filter(byDate(DATE)));
+          assert.deepEqual(response.body, dbMock.find(byDate(DATE)));
         });
   });
 });
 
 describe(`POST api/posts`, () => {
-  it(`accepts multipart/form-data`, () => {
+  it(`should accept multipart/form-data`, () => {
     return request(app)
         .post(`/api/posts`)
         .field(`key`, `value`)
@@ -63,6 +63,16 @@ describe(`POST api/posts`, () => {
         .then((response) => {
           assert.equal(response.body.key, `value`);
           assert.equal(response.body.key2, `value2`);
+        });
+  });
+
+  it(`should accept JSON`, () => {
+    return request(app)
+        .post(`/api/posts`)
+        .send(dbMock[0])
+        .expect(200)
+        .then((response) => {
+          assert.deepEqual(response.body, dbMock[0]);
         });
   });
 });

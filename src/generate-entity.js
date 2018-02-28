@@ -12,13 +12,14 @@ const {
 
 const generateEntity = () => {
   return {
-    url: `https://picsum.photos/600/?random`,
-    scale: getRandomNumber(0, 100),
+    comments: getRandomSubarray(COMMENTS, getRandomNumber(0, 10)),
+    date: Date.now(),
+    description: getRandomArrayElement(COMMENTS),
     effect: getRandomArrayElement(EFFECTS),
     hashtags: getRandomSubarray(HASHTAGS, getRandomNumber(0, 5)),
-    description: getRandomArrayElement(COMMENTS),
     likes: getRandomNumber(0, 1000),
-    comments: getRandomSubarray(COMMENTS, getRandomNumber(0, 10)),
+    scale: getRandomNumber(0, 100),
+    url: `https://picsum.photos/600/?random`,
   };
 };
 

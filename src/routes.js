@@ -4,8 +4,8 @@ const multer = require(`multer`);
 
 const {
   createPost,
-  getAllData,
-  getDataByDate,
+  getAllPosts,
+  getByDate,
 } = require(`./controller.js`);
 
 const router = new Router();
@@ -13,8 +13,11 @@ const upload = multer({storage: multer.memoryStorage()});
 
 router
     .use(bodyParser.json())
-    .get(`/`, getAllData)
-    .get(`/:date`, getDataByDate)
+
+    .get(`/`, getAllPosts)
+    .get(`/:date`, getByDate(`post`))
+    .get(`/:date/image`, getByDate(`image`))
+
     .post(`/`, upload.single(), createPost);
 
 module.exports = router;

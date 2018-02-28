@@ -1,5 +1,6 @@
 const express = require(`express`);
 const app = express();
+
 const {log} = require(`./utils.js`);
 const routes = require(`./routes.js`);
 
@@ -11,6 +12,7 @@ const {
 app
     .set(`host`, SERVER_HOST)
     .set(`port`, process.argv[3] || SERVER_PORT)
+
     .use(express.static(`static`))
     .use(`/api/posts`, routes);
 

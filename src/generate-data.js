@@ -6,7 +6,7 @@ const {
 } = require(`./utils.js`);
 
 const generateData = (fn, count) =>
-  Array(...Array(count)).map(fn);
+  [...Array(count)].map(fn);
 
 const formatData = (data) =>
   JSON.stringify(data, null, 2);

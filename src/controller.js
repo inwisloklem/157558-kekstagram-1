@@ -7,13 +7,13 @@ const createPost = async (request, response) => {
       .send(request.body);
 };
 
-const getAllData = async (request, response) => {
+const getAllPosts = async (request, response) => {
   const {
     limit = 50,
     skip = 0,
   } = request.query;
 
-  if (!Number.isInteger(+skip) || !Number.isInteger(+limit)) {
+  if (Number.isNaN(+skip) || Number.isNaN(+limit) || skip < 0 || limit < 1) {
     response
         .status(400)
         .end();
@@ -23,37 +23,54 @@ const getAllData = async (request, response) => {
 
   response
       .status(200)
-      .json(DB_MOCK.slice(skip, limit));
+      .json(DB_MOCK.slice(+skip, +limit));
 };
 
-const getDataByDate = async (request, response) => {
-  const date = +request.params.date;
+const getByDate = (type) =>
+  async (request, response) => {
+    const date = +request.params.date;
 
-  const posts = DB_MOCK.filter(byDate(date));
+    const post = DB_MOCK.find(byDate(date));
 
-  if (!Number.isInteger(date)) {
+    if (!Number.isInteger(date)) {
+      response
+          .status(400)
+          .end();
+
+      return;
+    }
+
+    if (typeof post !== `object`) {
+      response
+          .status(404)
+          .end();
+
+      return;
+    }
+
+    if (type === `image`) {
+      response
+          .status(302)
+          .redirect(post.url);
+
+      return;
+    }
+
+    if (type === `post`) {
+      response
+          .status(200)
+          .json(post);
+
+      return;
+    }
+
     response
-        .status(400)
+        .status(500)
         .end();
-
-    return;
-  }
-
-  if (!posts.length) {
-    response
-        .status(404)
-        .end();
-
-    return;
-  }
-
-  response
-      .status(200)
-      .json(posts);
-};
+  };
 
 module.exports = {
   createPost,
-  getAllData,
-  getDataByDate,
+  getAllPosts,
+  getByDate,
 };

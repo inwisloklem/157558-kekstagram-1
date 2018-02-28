@@ -2,6 +2,10 @@ const byName = (name) =>
   (array) =>
     array.name === name;
 
+const byDate = (date) =>
+  (array) =>
+    array.date === date;
+
 const eachIsInArray = (array, arrayToCompare) => {
   if (array.length === 0) {
     return true;
@@ -78,6 +82,7 @@ const partial = (fn, ...currentArgs) =>
     fn(...currentArgs, ...laterArgs);
 
 module.exports = {
+  byDate,
   byName,
   eachIsInArray,
   eachIsUnique,

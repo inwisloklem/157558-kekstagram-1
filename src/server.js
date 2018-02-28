@@ -8,11 +8,11 @@ const {
   SERVER_PORT,
 } = require(`./config.js`);
 
-app.set(`host`, SERVER_HOST);
-app.set(`port`, process.argv[3] || SERVER_PORT);
-
-app.use(express.static(`static`));
-app.use(`/api/posts`, routes);
+app
+    .set(`host`, SERVER_HOST)
+    .set(`port`, process.argv[3] || SERVER_PORT)
+    .use(express.static(`static`))
+    .use(`/api/posts`, routes);
 
 
 module.exports = {

@@ -41,14 +41,14 @@ describe(`GET /api/posts`, () => {
 
 describe(`GET /api/posts/:date`, () => {
   it(`should respond w/ same data in JSON as in mock file by date`, () => {
-    const date = 1519736965943;
+    const DATE = 1519736965943;
 
     return request(app)
-        .get(`/api/posts/${date}`)
+        .get(`/api/posts/${DATE}`)
         .expect(200)
         .expect(`Content-Type`, /json/)
         .then((response) => {
-          assert.deepEqual(response.body, dbMock.filter(byDate(date)));
+          assert.deepEqual(response.body, dbMock.filter(byDate(DATE)));
         });
   });
 });

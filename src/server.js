@@ -16,7 +16,6 @@ app
     .use(express.static(`static`))
     .use(`/api/posts`, routes);
 
-
 module.exports = {
   app,
   name: `server`,

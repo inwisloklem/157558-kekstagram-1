@@ -38,6 +38,7 @@ const getPostByDate = (request, response) => {
   if (!Number.isInteger(date)) {
     response
         .status(400)
+        .json([ERRORS.BAD_REQUEST])
         .end();
 
     return;

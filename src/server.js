@@ -2,7 +2,9 @@ const express = require(`express`);
 const app = express();
 
 const {log} = require(`./utils.js`);
-const routes = require(`./routes.js`);
+const postRoutes = require(`./post-routes.js`);
+
+const {getNotImplemented} = require(`./post-controller.js`);
 
 const {
   SERVER_HOST,
@@ -13,8 +15,10 @@ app
     .set(`host`, SERVER_HOST)
     .set(`port`, process.argv[3] || SERVER_PORT)
 
+    .use(`/api/posts`, postRoutes)
     .use(express.static(`static`))
-    .use(`/api/posts`, routes);
+
+    .all(/api\/posts/, getNotImplemented);
 
 module.exports = {
   app,

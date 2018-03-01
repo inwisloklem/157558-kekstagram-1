@@ -9,12 +9,14 @@ const createPost = (request, response) => {
 };
 
 const getAllPosts = (request, response) => {
-  const {
+  let {
     skip = 0,
     limit = 50,
   } = request.query;
 
-  if (Number.isNaN(Number(skip)) || Number.isNaN(Number(limit)) || skip < 0 || limit < 1) {
+  [skip, limit] = [Number(skip), Number(limit)];
+
+  if (Number.isNaN(skip) || Number.isNaN(limit) || skip < 0 || limit < 1) {
     response
         .status(400)
         .json([ERRORS.BAD_REQUEST])
@@ -24,7 +26,7 @@ const getAllPosts = (request, response) => {
   }
 
   const data = DB_MOCK
-      .slice(Number(skip), Number(skip) + Number(limit));
+      .slice(skip, skip + limit);
 
   response
       .status(200)

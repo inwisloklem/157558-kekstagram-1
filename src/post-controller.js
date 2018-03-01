@@ -16,7 +16,7 @@ const getAllPosts = (request, response) => {
 
   [skip, limit] = [Number(skip), Number(limit)];
 
-  if (Number.isNaN(skip) || Number.isNaN(limit) || skip < 0 || limit < 1) {
+  if (!Number.isInteger(skip) || !Number.isInteger(limit) || skip < 0 || limit < 1) {
     response
         .status(400)
         .json([ERRORS.BAD_REQUEST])

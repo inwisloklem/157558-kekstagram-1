@@ -3,8 +3,8 @@ const byName = (name) =>
     array.name === name;
 
 const byDate = (date) =>
-  (array) =>
-    array.date === date;
+  (item) =>
+    item.date === date;
 
 const eachIsInArray = (array, arrayToCompare) => {
   if (array.length === 0) {

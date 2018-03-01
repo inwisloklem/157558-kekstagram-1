@@ -24,7 +24,6 @@ describe(`GET /api/posts`, () => {
         .expect(200)
         .expect(`Content-Type`, /json/)
         .then((response) => {
-          console.log(response.body);
           assert.deepEqual(response.body, DB_MOCK.slice(5, 55));
         });
   });
@@ -41,7 +40,7 @@ describe(`GET /api/posts`, () => {
 
   it(`should respond w/ 400 Bad Request in case of bad query parameters`, () => {
     return request(app)
-        .get(`/api/posts?limit=wtf`)
+        .get(`/api/posts?limit=not&skip=valid`)
         .expect(400)
         .expect(`Content-Type`, /json/)
         .then((response) => {
@@ -60,6 +59,18 @@ describe(`GET /api/posts/:date`, () => {
         .expect(`Content-Type`, /json/)
         .then((response) => {
           assert.deepEqual(response.body, DB_MOCK.find(byDate(DATE)));
+        });
+  });
+
+  it(`should respond w/ 404 Not Found if data not found by date`, () => {
+    const DATE = 666;
+
+    return request(app)
+        .get(`/api/posts/${DATE}`)
+        .expect(404)
+        .expect(`Content-Type`, /json/)
+        .then((response) => {
+          assert.deepEqual(response.body, [ERRORS.NOT_FOUND]);
         });
   });
 });

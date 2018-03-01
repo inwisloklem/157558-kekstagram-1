@@ -57,7 +57,7 @@ const getPostByDate = (request, response) => {
       .json(post);
 };
 
-const getNotImplemented = (request, response) => {
+const handleNotImplemented = (request, response) => {
   response
       .status(501)
       .json([ERRORS.NOT_IMPLEMENTED])
@@ -68,5 +68,5 @@ module.exports = {
   createPost,
   getAllPosts,
   getPostByDate,
-  getNotImplemented,
+  handleNotImplemented,
 };

@@ -5,7 +5,7 @@ const {app} = require(`../src/server.js`);
 const {byDate} = require(`../src/utils.js`);
 
 const DB_MOCK = require(`../src/mock.js`);
-const ERRORS = require(`../src/errors.js`);
+const Errors = require(`../src/errors.js`);
 
 describe(`GET /api/posts`, () => {
   it(`should respond w/ same JSON data as in mock file (limit: 15)`, () => {
@@ -44,7 +44,7 @@ describe(`GET /api/posts`, () => {
         .expect(400)
         .expect(`Content-Type`, /json/)
         .then((response) => {
-          assert.deepEqual(response.body, [ERRORS.BAD_REQUEST]);
+          assert.deepEqual(response.body, [Errors.BAD_REQUEST]);
         });
   });
 });
@@ -70,7 +70,7 @@ describe(`GET /api/posts/:date`, () => {
         .expect(404)
         .expect(`Content-Type`, /json/)
         .then((response) => {
-          assert.deepEqual(response.body, [ERRORS.NOT_FOUND]);
+          assert.deepEqual(response.body, [Errors.NOT_FOUND]);
         });
   });
 });
@@ -107,7 +107,7 @@ describe(`DELETE /api/posts`, () => {
         .expect(501)
         .expect(`Content-Type`, /json/)
         .then((response) => {
-          assert.deepEqual(response.body, [ERRORS.NOT_IMPLEMENTED]);
+          assert.deepEqual(response.body, [Errors.NOT_IMPLEMENTED]);
         });
   });
 });

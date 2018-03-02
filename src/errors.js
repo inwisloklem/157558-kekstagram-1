@@ -1,4 +1,4 @@
-const ERRORS = {
+const Errors = {
   BAD_REQUEST: {
     error: `400 Bad Request`,
     errorMessage: `Server could not understand the request due to invalid query params.`,
@@ -13,4 +13,4 @@ const ERRORS = {
   }
 };
 
-module.exports = ERRORS;
+module.exports = Errors;

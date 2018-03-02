@@ -1,5 +1,5 @@
 const DB_MOCK = require(`./mock.js`);
-const ERRORS = require(`./errors.js`);
+const Errors = require(`./errors.js`);
 const {byDate} = require(`./utils.js`);
 
 const createPost = (request, response) => {
@@ -19,7 +19,7 @@ const getAllPosts = (request, response) => {
   if (!Number.isInteger(skip) || !Number.isInteger(limit) || skip < 0 || limit < 1) {
     response
         .status(400)
-        .json([ERRORS.BAD_REQUEST])
+        .json([Errors.BAD_REQUEST])
         .end();
 
     return;
@@ -40,7 +40,7 @@ const getPostByDate = (request, response) => {
   if (!Number.isInteger(date)) {
     response
         .status(400)
-        .json([ERRORS.BAD_REQUEST])
+        .json([Errors.BAD_REQUEST])
         .end();
 
     return;
@@ -49,7 +49,7 @@ const getPostByDate = (request, response) => {
   if (typeof post !== `object`) {
     response
         .status(404)
-        .json([ERRORS.NOT_FOUND])
+        .json([Errors.NOT_FOUND])
         .end();
 
     return;
@@ -63,7 +63,7 @@ const getPostByDate = (request, response) => {
 const handleNotImplemented = (request, response) => {
   response
       .status(501)
-      .json([ERRORS.NOT_IMPLEMENTED])
+      .json([Errors.NOT_IMPLEMENTED])
       .end();
 };
 

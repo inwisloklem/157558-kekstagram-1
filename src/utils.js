@@ -10,6 +10,7 @@ const eachIsInArray = (array, arrayToCompare) => {
   if (array.length === 0) {
     return true;
   }
+
   return array.every((element) => arrayToCompare.includes(element));
 };
 
@@ -22,6 +23,7 @@ const eachLengthIsLt = (array, max) => {
   if (array.length === 0) {
     return true;
   }
+
   return array.every((element) => element.length < max);
 };
 
@@ -29,6 +31,7 @@ const eachStartsWithSymbol = (array, symbol) => {
   if (array.length === 0) {
     return true;
   }
+
   return array.every((element) => element[0] === symbol);
 };
 

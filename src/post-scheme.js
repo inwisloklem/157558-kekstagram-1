@@ -5,6 +5,7 @@ const {
   everyWordIsUnique,
   everyWordStartsWith,
   greaterThanEqual,
+  image,
   inRange,
   integer,
   oneOf,
@@ -25,6 +26,10 @@ const scheme = {
   effect: [
     required,
     oneOf(EFFECTS),
+  ],
+  filename: [
+    required,
+    image,
   ],
   hashtags: [
     everyTextInRange(0, 20),

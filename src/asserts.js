@@ -55,6 +55,19 @@ const greaterThanEqual = (limit) =>
     return null;
   };
 
+const image =
+  (field, value) => {
+    if (!value || value.mimetype.startsWith(`image`)) {
+      return null;
+    }
+
+    return {
+      ...VALIDATION_ERROR,
+      field,
+      errorMessage: `is not an image`,
+    };
+  };
+
 const inRange = (min, max) =>
   (field, value) => {
     if (!value || (value >= min && value <= max)) {
@@ -169,6 +182,7 @@ module.exports = {
   everyWordIsUnique,
   everyWordStartsWith,
   greaterThanEqual,
+  image,
   inRange,
   integer,
   lessThanEqual,

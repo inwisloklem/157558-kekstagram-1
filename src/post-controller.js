@@ -2,10 +2,27 @@ const DB_MOCK = require(`./mock.js`);
 const Errors = require(`./errors.js`);
 const {byDate} = require(`./utils.js`);
 
+const validate = require(`./validate.js`);
+const postScheme = require(`./post-scheme.js`);
+
 const createPost = (request, response) => {
+  const data = request.body;
+
+  const errors = validate(data)
+      .with(postScheme);
+
+  if (errors.length > 0) {
+    response
+        .status(400)
+        .json(errors)
+        .end();
+
+    return;
+  }
+
   response
       .status(200)
-      .send(request.body);
+      .send(data);
 };
 
 const getAllPosts = (request, response) => {

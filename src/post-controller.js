@@ -7,6 +7,7 @@ const postScheme = require(`./post-scheme.js`);
 
 const createPost = (request, response) => {
   const data = request.body;
+  data.filename = request.file || data.filename;
 
   const errors = validate(data)
       .with(postScheme);

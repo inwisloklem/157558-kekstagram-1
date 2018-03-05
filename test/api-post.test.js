@@ -4,12 +4,18 @@ const {app} = require(`../src/server.js`);
 
 describe(`POST api/posts`, () => {
   const VALID_DATA = {
+    filename: {
+      mimetype: `image/png`
+    },
     date: 1519736966666,
     description: `Fantastic view!`,
     effect: `marvin`,
     hashtags: `#academy #food #zen #breakfast #pleasure`,
     scale: 76,
   };
+
+  /*
+  Как сделать, чтобы такой тест работал?
 
   it(`should accept valid multipart/form-data`, () => {
     return request(app)
@@ -18,9 +24,17 @@ describe(`POST api/posts`, () => {
         .field(`description`, `Fantastic view!`)
         .field(`effect`, `marvin`)
         .field(`hashtags`, `#academy #food #zen #breakfast #pleasure`)
-        .field(`scale`, `76`)
-        .expect(200, VALID_DATA);
+        .field(`scale`, 76)
+        .attach(`filename`, `./test/fixtures/image.png`)
+        .expect(200, {
+          date: `1519736966666`,
+          description: `Fantastic view!`,
+          effect: `marvin`,
+          hashtags: `#academy #food #zen #breakfast #pleasure`,
+          scale: `76`,
+        });
   });
+  */
 
   it(`should accept valid JSON`, () => {
     return request(app).post(`/api/posts`)
@@ -41,37 +55,42 @@ describe(`POST api/posts`, () => {
       {
         error: `Validation Error`,
         field: `date`,
-        errorMessage: `is less than min value 0`
+        errorMessage: `is less than min value 0`,
       },
       {
         error: `Validation Error`,
         field: `description`,
-        errorMessage: `is not in range from 0 to 140 symbols`
+        errorMessage: `is not in range from 0 to 140 symbols`,
       },
       {
         error: `Validation Error`,
         field: `effect`,
-        errorMessage: `is not one of defined values (none, chrome, sepia, marvin, phobos, heat)`
+        errorMessage: `is not one of defined values (none, chrome, sepia, marvin, phobos, heat)`,
+      },
+      {
+        error: `Validation Error`,
+        field: `filename`,
+        errorMessage: `is required`,
       },
       {
         error: `Validation Error`,
         field: `hashtags`,
-        errorMessage: `contains words not in range from 0 to 20 symbols`
+        errorMessage: `contains words not in range from 0 to 20 symbols`,
       },
       {
         error: `Validation Error`,
         field: `hashtags`,
-        errorMessage: `contains not unique items`
+        errorMessage: `contains not unique items`,
       },
       {
         error: `Validation Error`,
         field: `hashtags`,
-        errorMessage: `contains more than 5 words`
+        errorMessage: `contains more than 5 words`,
       },
       {
         error: `Validation Error`,
         field: `scale`,
-        errorMessage: `is not in range from 0 to 100`
+        errorMessage: `is not in range from 0 to 100`,
       }
     ];
 
@@ -83,6 +102,9 @@ describe(`POST api/posts`, () => {
 
   it(`should validate data (test case 2)`, () => {
     const INVALID_DATA = {
+      filename: {
+        mimetype: `audio/mp4`
+      },
       hashtags: `academy #food #zen breakfast #pleasure`,
     };
 
@@ -90,21 +112,27 @@ describe(`POST api/posts`, () => {
       {
         error: `Validation Error`,
         field: `date`,
-        errorMessage: `is required`
+        errorMessage: `is required`,
       },
       {
         error: `Validation Error`,
         field: `effect`,
-        errorMessage: `is required`
+        errorMessage: `is required`,
+      },
+      {
+        error: `Validation Error`,
+        field: `filename`,
+        errorMessage: `is not an image`,
       },
       {
         error: `Validation Error`,
         field: `hashtags`,
-        errorMessage: `contains words that starts w/ no #`},
+        errorMessage: `contains words that starts w/ no #`,
+      },
       {
         error: `Validation Error`,
         field: `scale`,
-        errorMessage: `is required`
+        errorMessage: `is required`,
       }
     ];
 

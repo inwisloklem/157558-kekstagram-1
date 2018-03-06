@@ -4,7 +4,7 @@ const VALIDATION_ERROR = {
   error: `Validation Error`,
 };
 
-const everyTextInRange = (min, max) =>
+const everyTextLength = (min, max) =>
   (field, value) => {
     const inRange = (item) =>
       (item.length >= min && item.length <= max);
@@ -19,6 +19,18 @@ const everyTextInRange = (min, max) =>
       errorMessage: `contains words not in range from ${min} to ${max} symbols`,
     };
   };
+
+const everyWordIsUnique = (field, value) => {
+  if (!value || eachIsUnique(value.split(` `))) {
+    return null;
+  }
+
+  return {
+    ...VALIDATION_ERROR,
+    field,
+    errorMessage: `contains not unique items`,
+  };
+};
 
 const everyWordStartsWith =
   (symbol) =>
@@ -38,24 +50,20 @@ const everyWordStartsWith =
       };
     };
 
-const greaterThanEqual = (limit) =>
+const isGreaterThanOrEqual = (limit) =>
   (field, value) => {
     if (!value || (value >= limit)) {
       return null;
     }
 
-    if (Number.isInteger(Number(value))) {
-      return {
-        ...VALIDATION_ERROR,
-        field,
-        errorMessage: `is less than min value ${limit}`,
-      };
-    }
-
-    return null;
+    return {
+      ...VALIDATION_ERROR,
+      field,
+      errorMessage: `is less than min value ${limit}`,
+    };
   };
 
-const image =
+const isImage =
   (field, value) => {
     if (!value || value.mimetype.startsWith(`image`)) {
       return null;
@@ -68,7 +76,7 @@ const image =
     };
   };
 
-const inRange = (min, max) =>
+const isInRange = (min, max) =>
   (field, value) => {
     if (!value || (value >= min && value <= max)) {
       return null;
@@ -85,7 +93,7 @@ const inRange = (min, max) =>
     return null;
   };
 
-const integer = (field, value) => {
+const isInteger = (field, value) => {
   if (!value || Number.isInteger(Number(value))) {
     return null;
   }
@@ -97,21 +105,17 @@ const integer = (field, value) => {
   };
 };
 
-const lessThanEqual = (limit) =>
+const isLessThanOrEqual = (limit) =>
   (field, value) => {
     if (!value || (value <= limit)) {
       return null;
     }
 
-    if (Number.isInteger(Number(value))) {
-      return {
-        ...VALIDATION_ERROR,
-        field,
-        errorMessage: `is greater than max value ${limit}`,
-      };
-    }
-
-    return null;
+    return {
+      ...VALIDATION_ERROR,
+      field,
+      errorMessage: `is greater than max value ${limit}`,
+    };
   };
 
 const maxWords = (limit) =>
@@ -127,7 +131,7 @@ const maxWords = (limit) =>
     };
   };
 
-const oneOf = (values) =>
+const isOneOf = (values) =>
   (field, value) => {
     if (!value || values.includes(value)) {
       return null;
@@ -140,19 +144,7 @@ const oneOf = (values) =>
     };
   };
 
-const required = (field, value) => {
-  if (value) {
-    return null;
-  }
-
-  return {
-    ...VALIDATION_ERROR,
-    field,
-    errorMessage: `is required`,
-  };
-};
-
-const textInRange = (min, max) =>
+const textLength = (min, max) =>
   (field, value) => {
     if (!value || (value.length >= min && value.length <= max)) {
       return null;
@@ -165,30 +157,17 @@ const textInRange = (min, max) =>
     };
   };
 
-const everyWordIsUnique = (field, value) => {
-  if (!value || eachIsUnique(value.split(` `))) {
-    return null;
-  }
-
-  return {
-    ...VALIDATION_ERROR,
-    field,
-    errorMessage: `contains not unique items`,
-  };
-};
-
 module.exports = {
-  everyTextInRange,
+  everyTextLength,
   everyWordIsUnique,
   everyWordStartsWith,
-  greaterThanEqual,
-  image,
-  inRange,
-  integer,
-  lessThanEqual,
+  isGreaterThanOrEqual,
+  isImage,
+  isInRange,
+  isInteger,
+  isLessThanOrEqual,
+  isOneOf,
   maxWords,
-  oneOf,
-  required,
-  textInRange,
+  textLength,
   VALIDATION_ERROR,
 };

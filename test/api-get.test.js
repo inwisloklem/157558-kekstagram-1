@@ -38,19 +38,19 @@ describe(`GET /api/posts`, () => {
 
 describe(`GET /api/posts/:date`, () => {
   it(`should respond w/ same data in JSON as in mock file by date`, () => {
-    const DATE = 1519736965943;
+    const VALID_DATE = 1519736965943;
 
     return request(app)
-        .get(`/api/posts/${DATE}`)
+        .get(`/api/posts/${VALID_DATE}`)
         .expect(`Content-Type`, /json/)
-        .expect(200, DB_MOCK.find(byDate(DATE)));
+        .expect(200, DB_MOCK.find(byDate(VALID_DATE)));
   });
 
   it(`should respond w/ 404 Not Found if data not found by date`, () => {
-    const DATE = 666;
+    const INVALID_DATE = 666;
 
     return request(app)
-        .get(`/api/posts/${DATE}`)
+        .get(`/api/posts/${INVALID_DATE}`)
         .expect(`Content-Type`, /json/)
         .expect(404, [Errors.NOT_FOUND]);
   });

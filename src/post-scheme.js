@@ -1,6 +1,7 @@
 const {EFFECTS} = require(`./data.js`);
 
 const {
+  combine,
   everyTextLength,
   everyWordIsUnique,
   everyWordStartsWith,
@@ -40,10 +41,12 @@ const scheme = {
   },
   hashtags: {
     asserts: [
-      everyTextLength(0, 20),
-      everyWordIsUnique,
-      everyWordStartsWith(`#`),
-      maxWords(5),
+      combine(
+          everyTextLength(0, 20),
+          everyWordIsUnique,
+          everyWordStartsWith(`#`),
+          maxWords(5),
+      ),
     ],
   },
   scale: {

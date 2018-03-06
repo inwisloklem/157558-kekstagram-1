@@ -1,21 +1,28 @@
-const tryAsserts = (field, value, asserts) =>
-  asserts
+const {VALIDATION_ERROR} = require(`./asserts.js`);
+
+const tryAsserts = (value, field, fieldScheme) => {
+  if (fieldScheme.required && !value) {
+    return [{
+      ...VALIDATION_ERROR,
+      field,
+      errorMessage: `is required`,
+    }];
+  }
+
+  return fieldScheme.asserts
       .map((fn) => fn(field, value));
+};
+
 
 const validate = (data) => ({
-  with(scheme) {
-    let errors = [];
-    for (const fieldName in scheme) {
-      if (scheme.hasOwnProperty(fieldName)) {
-        const result = tryAsserts(fieldName, data[fieldName], scheme[fieldName])
-            .filter((value) => value);
+  use(scheme) {
+    return Object.keys(scheme)
+        .reduce((errors, fieldName) => {
+          const result = tryAsserts(data[fieldName], fieldName, scheme[fieldName])
+              .filter((value) => value);
 
-        errors = errors
-            .concat(result);
-      }
-    }
-
-    return errors;
+          return errors.concat(result);
+        }, []);
   }
 });
 

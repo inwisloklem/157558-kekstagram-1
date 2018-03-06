@@ -4,6 +4,11 @@ const VALIDATION_ERROR = {
   error: `Validation Error`,
 };
 
+const combine = (...fns) =>
+  (field, value) =>
+    fns.reduce((errors, fn) =>
+      errors.concat(fn(field, value)), []);
+
 const everyTextLength = (min, max) =>
   (field, value) => {
     const inRange = (item) =>
@@ -158,6 +163,7 @@ const textLength = (min, max) =>
   };
 
 module.exports = {
+  combine,
   everyTextLength,
   everyWordIsUnique,
   everyWordStartsWith,

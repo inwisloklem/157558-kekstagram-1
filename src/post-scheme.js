@@ -1,47 +1,58 @@
 const {EFFECTS} = require(`./data.js`);
 
 const {
-  everyTextInRange,
+  everyTextLength,
   everyWordIsUnique,
   everyWordStartsWith,
-  greaterThanEqual,
-  image,
-  inRange,
-  integer,
-  oneOf,
+  isGreaterThanOrEqual,
+  isImage,
+  isInRange,
+  isInteger,
+  isOneOf,
   maxWords,
-  required,
-  textInRange,
+  textLength,
 } = require(`./asserts.js`);
 
 const scheme = {
-  date: [
-    required,
-    integer,
-    greaterThanEqual(0),
-  ],
-  description: [
-    textInRange(0, 140),
-  ],
-  effect: [
-    required,
-    oneOf(EFFECTS),
-  ],
-  filename: [
-    required,
-    image,
-  ],
-  hashtags: [
-    everyTextInRange(0, 20),
-    everyWordIsUnique,
-    everyWordStartsWith(`#`),
-    maxWords(5),
-  ],
-  scale: [
-    required,
-    integer,
-    inRange(0, 100),
-  ],
+  date: {
+    required: true,
+    asserts: [
+      isInteger,
+      isGreaterThanOrEqual(0),
+    ],
+  },
+  description: {
+    asserts: [
+      textLength(0, 140),
+    ],
+  },
+  effect: {
+    required: true,
+    asserts: [
+      isOneOf(EFFECTS),
+    ],
+  },
+  filename: {
+    required: true,
+    asserts: [
+      isImage,
+    ],
+  },
+  hashtags: {
+    asserts: [
+      everyTextLength(0, 20),
+      everyWordIsUnique,
+      everyWordStartsWith(`#`),
+      maxWords(5),
+    ],
+  },
+  scale: {
+    required: true,
+    asserts: [
+      isInteger,
+      isInRange(0, 100),
+    ],
+  },
 };
 
 module.exports = scheme;

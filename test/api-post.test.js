@@ -14,9 +14,6 @@ describe(`POST api/posts`, () => {
     scale: 76,
   };
 
-  /*
-  Как сделать, чтобы такой тест работал?
-
   it(`should accept valid multipart/form-data`, () => {
     return request(app)
         .post(`/api/posts`)
@@ -27,6 +24,13 @@ describe(`POST api/posts`, () => {
         .field(`scale`, 76)
         .attach(`filename`, `./test/fixtures/image.png`)
         .expect(200, {
+          filename: {
+            fieldname: `filename`,
+            originalname: `image.png`,
+            encoding: `7bit`,
+            mimetype: `image/png`,
+            size: 152636
+          },
           date: `1519736966666`,
           description: `Fantastic view!`,
           effect: `marvin`,
@@ -34,7 +38,6 @@ describe(`POST api/posts`, () => {
           scale: `76`,
         });
   });
-  */
 
   it(`should accept valid JSON`, () => {
     return request(app).post(`/api/posts`)

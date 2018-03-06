@@ -10,7 +10,7 @@ const createPost = (request, response) => {
   data.filename = request.file || data.filename;
 
   const errors = validate(data)
-      .with(postScheme);
+      .use(postScheme);
 
   if (errors.length > 0) {
     response
@@ -20,6 +20,8 @@ const createPost = (request, response) => {
 
     return;
   }
+
+  delete data.filename.buffer;
 
   response
       .status(200)

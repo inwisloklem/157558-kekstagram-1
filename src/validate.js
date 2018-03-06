@@ -9,10 +9,16 @@ const tryAsserts = (value, field, fieldScheme) => {
     }];
   }
 
-  return fieldScheme.asserts
-      .map((fn) => fn(field, value));
-};
+  for (const fn of fieldScheme.asserts) {
+    const error = fn(field, value);
 
+    if (error) {
+      return Array.isArray(error) ? error : [error];
+    }
+  }
+
+  return [];
+};
 
 const validate = (data) => ({
   use(scheme) {

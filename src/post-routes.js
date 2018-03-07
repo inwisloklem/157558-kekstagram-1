@@ -17,6 +17,6 @@ router
     .get(`/`, getAllPosts)
     .get(`/:date`, getPostByDate)
 
-    .post(`/`, upload.single(), createPost);
+    .post(`/`, upload.single(`filename`), createPost);
 
 module.exports = router;

@@ -20,16 +20,13 @@ const tryAsserts = (value, field, fieldScheme) => {
   return [];
 };
 
-const validate = (data) => ({
-  use(scheme) {
-    return Object.keys(scheme)
-        .reduce((errors, fieldName) => {
-          const result = tryAsserts(data[fieldName], fieldName, scheme[fieldName])
-              .filter((value) => value);
+const validate = (data, scheme) =>
+  Object.keys(scheme)
+      .reduce((errors, fieldName) => {
+        const result = tryAsserts(data[fieldName], fieldName, scheme[fieldName])
+            .filter((value) => value);
 
-          return errors.concat(result);
-        }, []);
-  }
-});
+        return errors.concat(result);
+      }, []);
 
 module.exports = validate;

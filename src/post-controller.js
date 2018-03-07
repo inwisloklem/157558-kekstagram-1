@@ -3,14 +3,13 @@ const Errors = require(`./errors.js`);
 const {byDate} = require(`./utils.js`);
 
 const validate = require(`./validate.js`);
-const postScheme = require(`./post-scheme.js`);
+const scheme = require(`./post-scheme.js`);
 
 const createPost = (request, response) => {
   const data = request.body;
   data.filename = request.file || data.filename;
 
-  const errors = validate(data)
-      .use(postScheme);
+  const errors = validate(data, scheme);
 
   if (errors.length > 0) {
     response

@@ -4,12 +4,12 @@ const VALIDATION_ERROR = {
   error: `Validation Error`,
 };
 
-const combine = (...fns) =>
+const combineAsserts = (...fns) =>
   (field, value) =>
     fns.reduce((errors, fn) =>
       errors.concat(fn(field, value)), []);
 
-const everyTextLength = (min, max) =>
+const checkEveryTextLength = (min, max) =>
   (field, value) => {
     const inRange = (item) =>
       (item.length >= min && item.length <= max);
@@ -25,7 +25,7 @@ const everyTextLength = (min, max) =>
     };
   };
 
-const everyWordIsUnique = (field, value) => {
+const checkEveryWordIsUnique = (field, value) => {
   if (!value || eachIsUnique(value.split(` `))) {
     return null;
   }
@@ -37,7 +37,7 @@ const everyWordIsUnique = (field, value) => {
   };
 };
 
-const everyWordStartsWith =
+const checkEveryWordStartsWith =
   (symbol) =>
     (field, value) => {
       const startsWithSymbol = (str) =>
@@ -55,7 +55,7 @@ const everyWordStartsWith =
       };
     };
 
-const isGreaterThanOrEqual = (limit) =>
+const checkGreaterThanOrEqual = (limit) =>
   (field, value) => {
     if (!value || (value >= limit)) {
       return null;
@@ -68,7 +68,7 @@ const isGreaterThanOrEqual = (limit) =>
     };
   };
 
-const isImage =
+const checkImage =
   (field, value) => {
     if (!value || value.mimetype.startsWith(`image`)) {
       return null;
@@ -81,7 +81,7 @@ const isImage =
     };
   };
 
-const isInRange = (min, max) =>
+const checkInRange = (min, max) =>
   (field, value) => {
     if (!value || (value >= min && value <= max)) {
       return null;
@@ -98,7 +98,7 @@ const isInRange = (min, max) =>
     return null;
   };
 
-const isInteger = (field, value) => {
+const checkInteger = (field, value) => {
   if (!value || Number.isInteger(Number(value))) {
     return null;
   }
@@ -110,7 +110,7 @@ const isInteger = (field, value) => {
   };
 };
 
-const isLessThanOrEqual = (limit) =>
+const checkLessThanOrEqual = (limit) =>
   (field, value) => {
     if (!value || (value <= limit)) {
       return null;
@@ -123,7 +123,7 @@ const isLessThanOrEqual = (limit) =>
     };
   };
 
-const maxWords = (limit) =>
+const checkMaxWords = (limit) =>
   (field, value) => {
     if (!value || (value.split(` `).length <= limit)) {
       return null;
@@ -136,7 +136,7 @@ const maxWords = (limit) =>
     };
   };
 
-const isOneOf = (values) =>
+const checkOneOf = (values) =>
   (field, value) => {
     if (!value || values.includes(value)) {
       return null;
@@ -149,7 +149,7 @@ const isOneOf = (values) =>
     };
   };
 
-const textLength = (min, max) =>
+const checkTextLength = (min, max) =>
   (field, value) => {
     if (!value || (value.length >= min && value.length <= max)) {
       return null;
@@ -163,17 +163,17 @@ const textLength = (min, max) =>
   };
 
 module.exports = {
-  combine,
-  everyTextLength,
-  everyWordIsUnique,
-  everyWordStartsWith,
-  isGreaterThanOrEqual,
-  isImage,
-  isInRange,
-  isInteger,
-  isLessThanOrEqual,
-  isOneOf,
-  maxWords,
-  textLength,
+  combineAsserts,
+  checkEveryTextLength,
+  checkEveryWordIsUnique,
+  checkEveryWordStartsWith,
+  checkGreaterThanOrEqual,
+  checkImage,
+  checkInRange,
+  checkInteger,
+  checkLessThanOrEqual,
+  checkOneOf,
+  checkMaxWords,
+  checkTextLength,
   VALIDATION_ERROR,
 };

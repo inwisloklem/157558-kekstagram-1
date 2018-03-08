@@ -1,13 +1,22 @@
-const DB_MOCK = require(`./mock.js`);
 const Errors = require(`./errors.js`);
-const {byDate} = require(`./utils.js`);
+const {createStreamFromBuffer} = require(`./utils.js`);
 
 const validate = require(`./validate.js`);
 const scheme = require(`./post-scheme.js`);
 
-const createPost = (request, response) => {
-  const data = request.body;
-  data.filename = request.file || data.filename;
+const postStore = require(`./post-store.js`);
+const imageStore = require(`./image-store.js`);
+
+const createPost = async (request, response) => {
+  const data = Object.assign({}, request.body);
+  const image = request.file;
+
+  if (image) {
+    data.filename = {
+      path: `/photos/${data.date}`,
+      mimetype: image.mimetype
+    };
+  }
 
   const errors = validate(data, scheme);
 
@@ -20,14 +29,26 @@ const createPost = (request, response) => {
     return;
   }
 
-  delete data.filename.buffer;
+  try {
+    await imageStore
+        .save(data.filename.path, createStreamFromBuffer(image.buffer));
+
+    await postStore
+        .savePost(data);
+
+  } catch (e) {
+    response
+        .status(500)
+        .json([Errors.INTERNAL_SERVER_ERROR])
+        .end();
+  }
 
   response
       .status(200)
       .send(data);
 };
 
-const getAllPosts = (request, response) => {
+const getAllPosts = async (request, response) => {
   let {
     skip = 0,
     limit = 50,
@@ -44,19 +65,30 @@ const getAllPosts = (request, response) => {
     return;
   }
 
-  const data = DB_MOCK
-      .slice(skip, skip + limit);
+  try {
+    const cursor = await postStore
+        .getAllPosts();
 
-  response
-      .status(200)
-      .json(data);
+    const data = await cursor
+        .skip(skip).limit(limit)
+        .toArray();
+
+    response
+        .status(200)
+        .json(data);
+
+  } catch (e) {
+    response
+        .status(500)
+        .json([Errors.INTERNAL_SERVER_ERROR])
+        .end();
+  }
 };
 
-const getPostByDate = (request, response) => {
-  const date = Number(request.params.date);
-  const post = DB_MOCK.find(byDate(date));
+const getImage = async (request, response) => {
+  const date = request.params.date;
 
-  if (!Number.isInteger(date)) {
+  if (!Number.isInteger(Number(request.params.date))) {
     response
         .status(400)
         .json([Errors.BAD_REQUEST])
@@ -65,18 +97,84 @@ const getPostByDate = (request, response) => {
     return;
   }
 
-  if (typeof post !== `object`) {
+  try {
+    const post = await postStore
+        .getPostByQuery({date: String(date)});
+
+    if (!post) {
+      response
+          .status(404)
+          .json([Errors.NOT_FOUND])
+          .end();
+
+      return;
+    }
+
+    const {filename} = post;
+
+    const {info, stream} = await imageStore
+        .get(filename.path);
+
+    if (!filename || !info || !stream) {
+      response
+          .status(404)
+          .json([Errors.NOT_FOUND])
+          .end();
+
+      return;
+    }
+
     response
-        .status(404)
-        .json([Errors.NOT_FOUND])
+        .set(`content-type`, filename.mimetype)
+        .set(`content-length`, info.length)
+        .status(200);
+
+    stream
+        .pipe(response);
+
+  } catch (e) {
+    response
+        .status(500)
+        .json([Errors.INTERNAL_SERVER_ERROR])
+        .end();
+  }
+};
+
+const getPostByDate = async (request, response) => {
+  const date = request.params.date;
+
+  if (!Number.isInteger(Number(request.params.date))) {
+    response
+        .status(400)
+        .json([Errors.BAD_REQUEST])
         .end();
 
     return;
   }
 
-  response
-      .status(200)
-      .json(post);
+  try {
+    const post = await postStore
+        .getPostByQuery({date: String(date)});
+
+    if (!post) {
+      response
+          .status(404)
+          .json([Errors.NOT_FOUND])
+          .end();
+
+      return;
+    }
+
+    response
+        .status(200)
+        .json(post);
+
+  } catch (e) {
+    response
+        .status(500)
+        .json([Errors.INTERNAL_SERVER_ERROR])
+        .end();
+  }
 };
 
 const handleNotImplemented = (request, response) => {
@@ -89,6 +187,7 @@ const handleNotImplemented = (request, response) => {
 module.exports = {
   createPost,
   getAllPosts,
+  getImage,
   getPostByDate,
   handleNotImplemented,
 };

@@ -5,6 +5,7 @@ const multer = require(`multer`);
 const {
   createPost,
   getAllPosts,
+  getImage,
   getPostByDate,
 } = require(`./post-controller.js`);
 
@@ -15,6 +16,7 @@ router
     .use(bodyParser.json())
 
     .get(`/`, getAllPosts)
+    .get(`/:date/image`, getImage)
     .get(`/:date`, getPostByDate)
 
     .post(`/`, upload.single(`filename`), createPost);

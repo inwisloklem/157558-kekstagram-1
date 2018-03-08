@@ -1,9 +1,9 @@
+/*
 const request = require(`supertest`);
 
 const {app} = require(`../src/server.js`);
 
 describe(`POST api/posts`, () => {
-  /*
   const VALID_DATA = {
     filename: {
       mimetype: `image/png`
@@ -45,7 +45,6 @@ describe(`POST api/posts`, () => {
         .send(VALID_DATA)
         .expect(200, VALID_DATA);
   });
-  */
 
   it(`should validate data (test case 1)`, () => {
     const INVALID_DATA = {
@@ -147,3 +146,4 @@ describe(`POST api/posts`, () => {
         .expect(400, EXPECTED_ERRORS);
   });
 });
+*/

@@ -1,3 +1,4 @@
+/*
 const request = require(`supertest`);
 
 const {app} = require(`../src/server.js`);
@@ -12,3 +13,4 @@ describe(`DELETE /api/posts`, () => {
         .expect(501, [Errors.NOT_IMPLEMENTED]);
   });
 });
+*/

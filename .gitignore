@@ -21,3 +21,7 @@ build/
 *.json
 !package.json
 !package-lock.json
+
+* Файлы базы данных
+data/
+!data/.gitkeep

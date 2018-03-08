@@ -7,6 +7,8 @@ const scheme = require(`./post-scheme.js`);
 const postStore = require(`./post-store.js`);
 const imageStore = require(`./image-store.js`);
 
+// const controller = {};
+
 const createPost = async (request, response) => {
   const data = Object.assign({}, request.body);
   const image = request.file;
@@ -191,3 +193,20 @@ module.exports = {
   getPostByDate,
   handleNotImplemented,
 };
+
+// Вот это не работает. Почему?
+
+/*
+module.exports = (postStore, imageStore) => {
+  controller.postStore = postStore;
+  controller.imageStore = imageStore;
+
+  return {
+    createPost,
+    getAllPosts,
+    getImage,
+    getPostByDate,
+    handleNotImplemented,
+  };
+};
+*/

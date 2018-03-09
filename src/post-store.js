@@ -1,8 +1,8 @@
-const db = require(`./database.js`);
+const mainDb = require(`./database.js`);
 const {log} = require(`./utils.js`);
 
 const setupCollection = async () => {
-  const dBase = await db;
+  const dBase = await mainDb;
 
   const collection = dBase.collection(`posts`);
   collection.createIndex({date: -1}, {unique: true});

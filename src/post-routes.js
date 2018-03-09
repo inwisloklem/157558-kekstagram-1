@@ -17,9 +17,12 @@ module.exports = (postStore, imageStore) => {
       .get(`/:date/image`, controller.getImage)
       .get(`/:date`, controller.getPostByDate)
 
-      .post(`/`, upload.single(`filename`), controller.createPost);
+      .post(`/`, upload.single(`filename`), controller.createPost)
 
-  // .use(controller.handleInternalServerError);
+      .use(controller.handleInternalServerError);
 
-  return router;
+  return {
+    router,
+    controller,
+  };
 };

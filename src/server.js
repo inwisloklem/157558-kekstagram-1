@@ -6,7 +6,10 @@ const {log} = require(`./utils.js`);
 const postStore = require(`./post-store.js`);
 const imageStore = require(`./image-store.js`);
 
-const postRoutes = require(`./post-routes.js`)(postStore, imageStore);
+const {
+  router,
+  controller,
+} = require(`./post-routes.js`)(postStore, imageStore);
 
 const {
   SERVER_HOST,
@@ -17,13 +20,12 @@ app
     .set(`host`, SERVER_HOST)
     .set(`port`, process.argv[3] || SERVER_PORT)
 
-    .use(`/api/posts`, postRoutes)
-    .use(express.static(`static`));
+    .use(`/api/posts`, router)
+    .use(express.static(`static`))
 
-// .all(/api\/posts/, postRoutes.controller.handleNotImplemented);
+    .all(/api\/posts/, controller.handleNotImplemented);
 
 module.exports = {
-  app,
   name: `server`,
   description: `Starts local server`,
   execute() {

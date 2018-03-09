@@ -25,8 +25,8 @@ describe(`generateEntity`, () => {
   });
 
   describe(`.url`, () => {
-    it(`should be equal to 'https://picsum.photos/600/?random'`, () => {
-      assert.equal(entity.url, `https://picsum.photos/600/?random`);
+    it(`should look like /api/posts/DATE/image`, () => {
+      assert(/api\/posts\/\d+\/image/.test(entity.url));
     });
   });
 
@@ -46,20 +46,20 @@ describe(`generateEntity`, () => {
   });
 
   describe(`.hashtags`, () => {
-    it(`should be array`, () => {
-      assert(Array.isArray(entity.hashtags));
+    it(`should be string`, () => {
+      assert(typeof entity.hashtags === `string`);
     });
-    it(`should contain no more than 5 elements`, () => {
-      assert(entity.hashtags.length <= 5);
+    it(`should contain no more than 5 words`, () => {
+      assert(entity.hashtags.split(` `).length <= 5);
     });
-    it(`should contain strings that starts with #`, () => {
-      assert(eachStartsWithSymbol(entity.hashtags, `#`));
+    it(`should contain words that starts with #`, () => {
+      assert(eachStartsWithSymbol(entity.hashtags ? entity.hashtags.split(` `) : [], `#`));
     });
-    it(`should contain unique elements`, () => {
-      assert(eachIsUnique(entity.hashtags));
+    it(`should contain unique words`, () => {
+      assert(eachIsUnique(entity.hashtags.split(` `)));
     });
-    it(`should contain elements less than 20 symbols each`, () => {
-      assert(eachLengthIsLt(entity.hashtags, 20));
+    it(`should contain words less than 20 symbols each`, () => {
+      assert(eachLengthIsLt(entity.hashtags.split(` `), 20));
     });
   });
 

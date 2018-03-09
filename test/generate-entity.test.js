@@ -1,19 +1,19 @@
 const assert = require(`assert`);
-const generateEntity = require(`../src/generate-entity.js`);
+const generateEntity = require(`../src/generate/generate-entity`);
 
-const Settings = require(`../src/post-settings.js`);
+const Settings = require(`../src/settings`);
 
 const {
   COMMENTS,
   EFFECTS,
-} = require(`../src/data.js`);
+} = require(`../src/data`);
 
 const {
   eachIsInArray,
   eachLengthIsLt,
   eachStartsWithSymbol,
   eachIsUnique,
-} = require(`../src/utils.js`);
+} = require(`../src/utils`);
 
 describe(`generateEntity`, () => {
   let entity;

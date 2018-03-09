@@ -1,6 +1,6 @@
-const MOCK_DB = require(`./mock-database.js`);
+const MOCK_DB = require(`./mock-database`);
 
-const {byDate} = require(`./utils.js`);
+const {byDate} = require(`../../src/utils`);
 
 class Cursor {
   constructor(data) {

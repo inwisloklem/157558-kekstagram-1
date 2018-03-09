@@ -1,4 +1,4 @@
-const {eachIsUnique} = require(`./utils.js`);
+const {eachIsUnique} = require(`../utils`);
 
 const VALIDATION_ERROR = {
   error: `Validation Error`,

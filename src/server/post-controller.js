@@ -1,12 +1,12 @@
-const Errors = require(`./errors.js`);
+const Errors = require(`./errors`);
 
 const {
   async,
   createStreamFromBuffer,
-} = require(`./utils.js`);
+} = require(`../utils`);
 
-const validate = require(`./validate.js`);
-const scheme = require(`./post-scheme.js`);
+const validate = require(`./validate`);
+const scheme = require(`./post-scheme`);
 
 class PostController {
   constructor(postStore, imageStore) {

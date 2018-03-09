@@ -2,15 +2,15 @@ const {
   COMMENTS,
   EFFECTS,
   HASHTAGS,
-} = require(`./data.js`);
+} = require(`../data`);
 
-const Settings = require(`./post-settings.js`);
+const Settings = require(`../settings`);
 
 const {
   getRandomNumber,
   getRandomArrayElement,
   getRandomSubarray,
-} = require(`./utils.js`);
+} = require(`../utils`);
 
 const generateEntity = () => {
   const date = Date.now() + getRandomNumber(Settings.DATE_FROM, Settings.DATE_TO);

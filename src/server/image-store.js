@@ -1,5 +1,5 @@
 const mongodb = require(`mongodb`);
-const db = require(`./database.js`);
+const db = require(`../server/database`);
 
 class ImageStore {
   async getBucket() {

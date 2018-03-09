@@ -1,17 +1,17 @@
 const express = require(`express`);
 const app = express();
 
-const {log} = require(`./utils.js`);
+const {log} = require(`../utils`);
 
-const postStore = require(`./post-store.js`);
-const imageStore = require(`./image-store.js`);
+const postStore = require(`../server/post-store`);
+const imageStore = require(`../server/image-store`);
 
-const router = require(`./post-routes.js`)(postStore, imageStore);
+const router = require(`../server/post-routes`)(postStore, imageStore);
 
 const {
   SERVER_HOST,
   SERVER_PORT,
-} = require(`./config.js`);
+} = require(`./config`);
 
 app
     .set(`host`, SERVER_HOST)

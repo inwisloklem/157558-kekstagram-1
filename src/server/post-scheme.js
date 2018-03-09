@@ -1,6 +1,6 @@
-const {EFFECTS} = require(`./data.js`);
+const {EFFECTS} = require(`../data`);
 
-const Settings = require(`./post-settings.js`);
+const Settings = require(`../settings`);
 
 const {
   combineAsserts,
@@ -14,7 +14,7 @@ const {
   checkOneOf,
   checkMaxWords,
   checkTextLength,
-} = require(`./asserts.js`);
+} = require(`./asserts`);
 
 const scheme = {
   date: {

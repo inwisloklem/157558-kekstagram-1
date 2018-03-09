@@ -2,15 +2,15 @@ const request = require(`supertest`);
 
 const app = require(`express`)();
 
-const MOCK_DB = require(`../src/mock-database.js`);
-const Errors = require(`../src/errors.js`);
+const MOCK_DB = require(`./mock/mock-database`);
+const Errors = require(`../src/server/errors`);
 
-const {byDate} = require(`../src/utils.js`);
+const {byDate} = require(`../src/utils`);
 
-const mockPostStore = require(`../src/mock-post-store.js`);
-const mockImageStore = require(`../src/mock-image-store.js`);
+const mockPostStore = require(`./mock/mock-post-store`);
+const mockImageStore = require(`./mock/mock-image-store`);
 
-const mockRouter = require(`../src/post-routes.js`)(mockPostStore, mockImageStore);
+const mockRouter = require(`../src/server/post-routes`)(mockPostStore, mockImageStore);
 
 app.use(`/api/posts`, mockRouter);
 

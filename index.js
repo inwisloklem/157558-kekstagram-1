@@ -4,16 +4,16 @@ const {
   byName,
   pipe,
   log,
-} = require(`./src/utils.js`);
+} = require(`./src/utils`);
 
 const commandsList = [
-  require(`./src/author.js`),
-  require(`./src/default.js`),
-  require(`./src/description.js`),
-  require(`./src/help.js`),
-  require(`./src/license.js`),
-  require(`./src/server.js`),
-  require(`./src/version.js`),
+  require(`./src/cli/author`),
+  require(`./src/cli/default`),
+  require(`./src/cli/description`),
+  require(`./src/cli/help`),
+  require(`./src/cli/license`),
+  require(`./src/cli/server`),
+  require(`./src/cli/version`),
 ];
 
 const getOption = (options) => {

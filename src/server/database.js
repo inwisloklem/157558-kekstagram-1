@@ -1,5 +1,5 @@
 const {MongoClient} = require(`mongodb`);
-const {log} = require(`./utils.js`);
+const {log} = require(`../utils`);
 
 const url = `mongodb://localhost:27017`;
 

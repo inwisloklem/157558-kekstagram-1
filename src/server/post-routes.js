@@ -2,7 +2,7 @@ const {Router} = require(`express`);
 const bodyParser = require(`body-parser`);
 const multer = require(`multer`);
 
-const PostController = require(`./post-controller.js`);
+const PostController = require(`./post-controller`);
 
 module.exports = (postStore, imageStore) => {
   const controller = new PostController(postStore, imageStore);

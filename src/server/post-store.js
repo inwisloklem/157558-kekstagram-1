@@ -1,5 +1,5 @@
-const mainDb = require(`./database.js`);
-const {log} = require(`./utils.js`);
+const mainDb = require(`./database`);
+const {log} = require(`../utils`);
 
 const setupCollection = async () => {
   const dBase = await mainDb;

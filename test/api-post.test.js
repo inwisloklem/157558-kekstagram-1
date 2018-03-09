@@ -1,49 +1,38 @@
-/*
 const request = require(`supertest`);
 
-const {app} = require(`../src/server.js`);
+const app = require(`express`)();
+
+const mockPostStore = require(`../src/mock-post-store.js`);
+const mockImageStore = require(`../src/mock-image-store.js`);
+
+const {router: mockRouter} = require(`../src/post-routes.js`)(mockPostStore, mockImageStore);
+
+app.use(`/api/posts`, mockRouter);
 
 describe(`POST api/posts`, () => {
-  const VALID_DATA = {
-    filename: {
-      mimetype: `image/png`
-    },
-    date: 1519736966666,
-    description: `Fantastic view!`,
-    effect: `marvin`,
-    hashtags: `#academy #food #zen #breakfast #pleasure`,
-    scale: 76,
-  };
-
   it(`should accept valid multipart/form-data`, () => {
     return request(app)
         .post(`/api/posts`)
-        .field(`date`, `1519736966666`)
-        .field(`description`, `Fantastic view!`)
-        .field(`effect`, `marvin`)
-        .field(`hashtags`, `#academy #food #zen #breakfast #pleasure`)
-        .field(`scale`, 76)
+        .field(`date`, `1520589389481`)
+        .field(`description`, `Wonderful depth and focus!`)
+        .field(`effect`, `none`)
+        .field(`hashtags`, `#pleasure #breakfast`)
+        .field(`likes`, 650)
+        .field(`scale`, 87)
         .attach(`filename`, `./test/fixtures/image.png`)
         .expect(200, {
+          date: 1520589389481,
+          description: `Wonderful depth and focus!`,
+          effect: `none`,
           filename: {
-            fieldname: `filename`,
-            originalname: `image.png`,
-            encoding: `7bit`,
-            mimetype: `image/png`,
-            size: 152636
+            path: `/photos/1520589389481`,
+            mimetype: `image/png`
           },
-          date: `1519736966666`,
-          description: `Fantastic view!`,
-          effect: `marvin`,
-          hashtags: `#academy #food #zen #breakfast #pleasure`,
-          scale: `76`,
+          hashtags: `#pleasure #breakfast`,
+          likes: 650,
+          scale: 87,
+          url: `/api/posts/1520589389481/image`,
         });
-  });
-
-  it(`should accept valid JSON`, () => {
-    return request(app).post(`/api/posts`)
-        .send(VALID_DATA)
-        .expect(200, VALID_DATA);
   });
 
   it(`should validate data (test case 1)`, () => {
@@ -146,4 +135,3 @@ describe(`POST api/posts`, () => {
         .expect(400, EXPECTED_ERRORS);
   });
 });
-*/

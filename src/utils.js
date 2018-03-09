@@ -1,5 +1,10 @@
 const {Duplex} = require(`stream`);
 
+const async = (fn) =>
+  (request, response, next) =>
+    fn(request, response, next)
+        .catch(next);
+
 const byName = (name) =>
   (array) =>
     array.name === name;
@@ -96,6 +101,7 @@ const partial = (fn, ...currentArgs) =>
     fn(...currentArgs, ...laterArgs);
 
 module.exports = {
+  async,
   byDate,
   byName,
   createStreamFromBuffer,

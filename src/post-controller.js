@@ -1,16 +1,15 @@
 const Errors = require(`./errors.js`);
-const {createStreamFromBuffer} = require(`./utils.js`);
+
+const {
+  async,
+  createStreamFromBuffer,
+} = require(`./utils.js`);
 
 const validate = require(`./validate.js`);
 const scheme = require(`./post-scheme.js`);
 
 const postStore = require(`./post-store.js`);
 const imageStore = require(`./image-store.js`);
-
-const async = (fn) =>
-  (request, response, next) =>
-    fn(request, response, next)
-        .catch(next);
 
 const createPost = async(async (request, response) => {
   const data = Object.assign({}, request.body);

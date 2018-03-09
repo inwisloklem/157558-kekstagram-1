@@ -10,7 +10,7 @@ const {byDate} = require(`../src/utils.js`);
 const mockPostStore = require(`../src/mock-post-store.js`);
 const mockImageStore = require(`../src/mock-image-store.js`);
 
-const {router: mockRouter} = require(`../src/post-routes.js`)(mockPostStore, mockImageStore);
+const mockRouter = require(`../src/post-routes.js`)(mockPostStore, mockImageStore);
 
 app.use(`/api/posts`, mockRouter);
 

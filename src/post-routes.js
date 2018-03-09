@@ -2,26 +2,24 @@ const {Router} = require(`express`);
 const bodyParser = require(`body-parser`);
 const multer = require(`multer`);
 
-const {
-  createPost,
-  getAllPosts,
-  getImage,
-  getPostByDate,
-  handleInternalServerError,
-} = require(`./post-controller.js`);
+const PostController = require(`./post-controller.js`);
 
-const router = new Router();
-const upload = multer({storage: multer.memoryStorage()});
+module.exports = (postStore, imageStore) => {
+  const controller = new PostController(postStore, imageStore);
 
-router
-    .use(bodyParser.json())
+  const router = new Router();
+  const upload = multer({storage: multer.memoryStorage()});
 
-    .get(`/`, getAllPosts)
-    .get(`/:date/image`, getImage)
-    .get(`/:date`, getPostByDate)
+  router
+      .use(bodyParser.json())
 
-    .post(`/`, upload.single(`filename`), createPost)
+      .get(`/`, controller.getAllPosts)
+      .get(`/:date/image`, controller.getImage)
+      .get(`/:date`, controller.getPostByDate)
 
-    .use(handleInternalServerError);
+      .post(`/`, upload.single(`filename`), controller.createPost);
 
-module.exports = router;
+  // .use(controller.handleInternalServerError);
+
+  return router;
+};

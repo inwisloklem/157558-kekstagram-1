@@ -4,7 +4,7 @@ const {
   HASHTAGS,
 } = require(`./data.js`);
 
-const {Settings} = require(`./post-scheme.js`);
+const Settings = require(`./post-settings.js`);
 
 const {
   getRandomNumber,

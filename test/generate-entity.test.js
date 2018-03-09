@@ -1,7 +1,7 @@
 const assert = require(`assert`);
 const generateEntity = require(`../src/generate-entity.js`);
 
-const {Settings} = require(`../src/post-scheme.js`);
+const Settings = require(`../src/post-settings.js`);
 
 const {
   COMMENTS,

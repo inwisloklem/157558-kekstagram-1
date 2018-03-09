@@ -1,17 +1,22 @@
 const Errors = require(`./errors.js`);
 
 const {
-  // async,
+  async,
   createStreamFromBuffer,
 } = require(`./utils.js`);
 
 const validate = require(`./validate.js`);
-const scheme = require(`./post-scheme.js`);
+const {scheme} = require(`./post-scheme.js`);
 
 class PostController {
   constructor(postStore, imageStore) {
     this.postStore = postStore;
     this.imageStore = imageStore;
+
+    this.createPost = async(this.createPost.bind(this));
+    this.getAllPosts = async(this.getAllPosts.bind(this));
+    this.getImage = async(this.getImage.bind(this));
+    this.getPostByDate = async(this.getPostByDate.bind(this));
   }
 
   async createPost(request, response) {
@@ -23,6 +28,8 @@ class PostController {
         path: `/photos/${data.date}`,
         mimetype: image.mimetype
       };
+
+      data.url = `/api/posts/${data.date}/image`;
     }
 
     const errors = validate(data, scheme);
@@ -152,7 +159,6 @@ class PostController {
         .json(post);
   }
 
-  /*
   handleNotImplemented(request, response) {
     response
         .status(501)
@@ -168,7 +174,6 @@ class PostController {
 
     next();
   }
-  */
 }
 
 module.exports = PostController;

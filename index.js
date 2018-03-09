@@ -3,6 +3,7 @@ require(`colors`);
 const {
   byName,
   pipe,
+  log,
 } = require(`./src/utils.js`);
 
 const commandsList = [
@@ -22,14 +23,16 @@ const getOption = (options) => {
   return `default`;
 };
 
-const findCommandByName = (cliArguments) => (commands) =>
-  commands.find(byName(getOption(cliArguments)));
+const findCommandByName = (cliArguments) =>
+  (commands) =>
+    commands
+        .find(byName(getOption(cliArguments)));
 
 const executeCommand = (command) => {
   try {
     command.execute();
   } catch (e) {
-    console.error(`Bad option. To get list of possible options type '--help'`);
+    log({message: `Bad option. To get list of possible options type '--help'`, type: `error`});
     process.exit(1);
   }
 };

@@ -6,10 +6,7 @@ const {log} = require(`./utils.js`);
 const postStore = require(`./post-store.js`);
 const imageStore = require(`./image-store.js`);
 
-const {
-  router,
-  controller,
-} = require(`./post-routes.js`)(postStore, imageStore);
+const router = require(`./post-routes.js`)(postStore, imageStore);
 
 const {
   SERVER_HOST,
@@ -21,9 +18,7 @@ app
     .set(`port`, process.argv[3] || SERVER_PORT)
 
     .use(`/api/posts`, router)
-    .use(express.static(`static`))
-
-    .all(/api\/posts/, controller.handleNotImplemented);
+    .use(express.static(`static`));
 
 module.exports = {
   name: `server`,

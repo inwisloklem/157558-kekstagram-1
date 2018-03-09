@@ -6,7 +6,7 @@ const {
 } = require(`./utils.js`);
 
 const validate = require(`./validate.js`);
-const {scheme} = require(`./post-scheme.js`);
+const scheme = require(`./post-scheme.js`);
 
 class PostController {
   constructor(postStore, imageStore) {

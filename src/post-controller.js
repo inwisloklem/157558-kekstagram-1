@@ -7,9 +7,12 @@ const scheme = require(`./post-scheme.js`);
 const postStore = require(`./post-store.js`);
 const imageStore = require(`./image-store.js`);
 
-// const controller = {};
+const async = (fn) =>
+  (request, response, next) =>
+    fn(request, response, next)
+        .catch(next);
 
-const createPost = async (request, response) => {
+const createPost = async(async (request, response) => {
   const data = Object.assign({}, request.body);
   const image = request.file;
 
@@ -31,26 +34,18 @@ const createPost = async (request, response) => {
     return;
   }
 
-  try {
-    await imageStore
-        .save(data.filename.path, createStreamFromBuffer(image.buffer));
+  await imageStore
+      .save(data.filename.path, createStreamFromBuffer(image.buffer));
 
-    await postStore
-        .savePost(data);
-
-  } catch (e) {
-    response
-        .status(500)
-        .json([Errors.INTERNAL_SERVER_ERROR])
-        .end();
-  }
+  await postStore
+      .savePost(data);
 
   response
       .status(200)
       .send(data);
-};
+});
 
-const getAllPosts = async (request, response) => {
+const getAllPosts = async(async (request, response) => {
   let {
     skip = 0,
     limit = 50,
@@ -67,27 +62,19 @@ const getAllPosts = async (request, response) => {
     return;
   }
 
-  try {
-    const cursor = await postStore
-        .getAllPosts();
+  const cursor = await postStore
+      .getAllPosts();
 
-    const data = await cursor
-        .skip(skip).limit(limit)
-        .toArray();
+  const data = await cursor
+      .skip(skip).limit(limit)
+      .toArray();
 
-    response
-        .status(200)
-        .json(data);
+  response
+      .status(200)
+      .json(data);
+});
 
-  } catch (e) {
-    response
-        .status(500)
-        .json([Errors.INTERNAL_SERVER_ERROR])
-        .end();
-  }
-};
-
-const getImage = async (request, response) => {
+const getImage = async(async (request, response) => {
   const date = request.params.date;
 
   if (!Number.isInteger(Number(request.params.date))) {
@@ -99,50 +86,42 @@ const getImage = async (request, response) => {
     return;
   }
 
-  try {
-    const post = await postStore
-        .getPostByQuery({date: String(date)});
+  const post = await postStore
+      .getPostByQuery({date: String(date)});
 
-    if (!post) {
-      response
-          .status(404)
-          .json([Errors.NOT_FOUND])
-          .end();
-
-      return;
-    }
-
-    const {filename} = post;
-
-    const {info, stream} = await imageStore
-        .get(filename.path);
-
-    if (!filename || !info || !stream) {
-      response
-          .status(404)
-          .json([Errors.NOT_FOUND])
-          .end();
-
-      return;
-    }
-
+  if (!post) {
     response
-        .set(`content-type`, filename.mimetype)
-        .set(`content-length`, info.length)
-        .status(200);
-
-    stream
-        .pipe(response);
-
-  } catch (e) {
-    response
-        .status(500)
-        .json([Errors.INTERNAL_SERVER_ERROR])
+        .status(404)
+        .json([Errors.NOT_FOUND])
         .end();
-  }
-};
 
-const getPostByDate = async (request, response) => {
+    return;
+  }
+
+  const {filename} = post;
+
+  const {info, stream} = await imageStore
+      .get(filename.path);
+
+  if (!filename || !info || !stream) {
+    response
+        .status(404)
+        .json([Errors.NOT_FOUND])
+        .end();
+
+    return;
+  }
+
+  response
+      .set(`content-type`, filename.mimetype)
+      .set(`content-length`, info.length)
+      .status(200);
+
+  stream
+      .pipe(response);
+});
+
+const getPostByDate = async(async (request, response) => {
   const date = request.params.date;
 
   if (!Number.isInteger(Number(request.params.date))) {
@@ -154,30 +133,22 @@ const getPostByDate = async (request, response) => {
     return;
   }
 
-  try {
-    const post = await postStore
-        .getPostByQuery({date: String(date)});
+  const post = await postStore
+      .getPostByQuery({date: String(date)});
 
-    if (!post) {
-      response
-          .status(404)
-          .json([Errors.NOT_FOUND])
-          .end();
-
-      return;
-    }
-
+  if (!post) {
     response
-        .status(200)
-        .json(post);
-
-  } catch (e) {
-    response
-        .status(500)
-        .json([Errors.INTERNAL_SERVER_ERROR])
+        .status(404)
+        .json([Errors.NOT_FOUND])
         .end();
+
+    return;
   }
-};
+
+  response
+      .status(200)
+      .json(post);
+});
 
 const handleNotImplemented = (request, response) => {
   response
@@ -186,27 +157,20 @@ const handleNotImplemented = (request, response) => {
       .end();
 };
 
+const handleInternalServerError = (exception, request, response, next) => {
+  response
+      .status(500)
+      .json([Errors.INTERNAL_SERVER_ERROR])
+      .end();
+
+  next();
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   getImage,
   getPostByDate,
+  handleInternalServerError,
   handleNotImplemented,
 };
-
-// Вот это не работает. Почему?
-
-/*
-module.exports = (postStore, imageStore) => {
-  controller.postStore = postStore;
-  controller.imageStore = imageStore;
-
-  return {
-    createPost,
-    getAllPosts,
-    getImage,
-    getPostByDate,
-    handleNotImplemented,
-  };
-};
-*/

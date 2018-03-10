@@ -1,6 +1,7 @@
 const express = require(`express`);
 
 const {log} = require(`../utils`);
+const logger = require(`../server/logger`);
 
 const PostStore = require(`../server/post-store`);
 const ImageStore = require(`../server/image-store`);
@@ -18,7 +19,7 @@ module.exports = {
 
     const postStore = new PostStore(
         setupCollection(initMainDb)
-            .catch((e) => log({message: `Failed to setup collecton: ${e}`, type: `error`}))
+            .catch((e) => logger.error(`Fails to setup collection`, e))
     );
 
     const imageStore = new ImageStore();

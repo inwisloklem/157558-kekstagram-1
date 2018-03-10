@@ -1,5 +1,5 @@
 const {MongoClient} = require(`mongodb`);
-const {log} = require(`../utils`);
+const logger = require(`./logger`);
 
 const {DB_HOST} = require(`../config.js`);
 
@@ -9,7 +9,7 @@ const initMainDb = () => MongoClient
     .connect(url)
     .then((client) => client.db(`kekstagram`))
     .catch((e) => {
-      log({message: `Failed to connect to database: ${e}`, type: `error`});
+      logger.error(`Fails to connect to database`, e);
       process.exit(1);
     });
 

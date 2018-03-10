@@ -1,4 +1,4 @@
-const {VALIDATION_ERROR} = require(`./asserts.js`);
+const {VALIDATION_ERROR} = require(`./asserts`);
 
 const tryAsserts = (value, field, fieldScheme) => {
   if (fieldScheme.required && !value) {

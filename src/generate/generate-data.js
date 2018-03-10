@@ -1,9 +1,9 @@
-const generateEntity = require(`./generate-entity.js`);
+const generateEntity = require(`./generate-entity`);
 
 const {
   pipe,
   partial,
-} = require(`./utils.js`);
+} = require(`../utils`);
 
 const generateData = (fn, count) =>
   [...Array(count)].map(fn);

@@ -3,16 +3,17 @@ require(`colors`);
 const {
   byName,
   pipe,
-} = require(`./src/utils.js`);
+  log,
+} = require(`./src/utils`);
 
 const commandsList = [
-  require(`./src/author.js`),
-  require(`./src/default.js`),
-  require(`./src/description.js`),
-  require(`./src/help.js`),
-  require(`./src/license.js`),
-  require(`./src/server.js`),
-  require(`./src/version.js`),
+  require(`./src/cli/author`),
+  require(`./src/cli/default`),
+  require(`./src/cli/description`),
+  require(`./src/cli/help`),
+  require(`./src/cli/license`),
+  require(`./src/cli/server`),
+  require(`./src/cli/version`),
 ];
 
 const getOption = (options) => {
@@ -22,14 +23,16 @@ const getOption = (options) => {
   return `default`;
 };
 
-const findCommandByName = (cliArguments) => (commands) =>
-  commands.find(byName(getOption(cliArguments)));
+const findCommandByName = (cliArguments) =>
+  (commands) =>
+    commands
+        .find(byName(getOption(cliArguments)));
 
 const executeCommand = (command) => {
   try {
     command.execute();
   } catch (e) {
-    console.error(`Bad option. To get list of possible options type '--help'`);
+    log({message: `Bad option. To get list of possible options type '--help'`, type: `error`});
     process.exit(1);
   }
 };

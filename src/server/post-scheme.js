@@ -1,4 +1,6 @@
-const {EFFECTS} = require(`./data.js`);
+const {EFFECTS} = require(`../data`);
+
+const Settings = require(`../settings`);
 
 const {
   combineAsserts,
@@ -12,19 +14,19 @@ const {
   checkOneOf,
   checkMaxWords,
   checkTextLength,
-} = require(`./asserts.js`);
+} = require(`./asserts`);
 
 const scheme = {
   date: {
     required: true,
     asserts: [
       checkInteger,
-      checkGreaterThanOrEqual(0),
+      checkGreaterThanOrEqual(Settings.MIN_DATE),
     ],
   },
   description: {
     asserts: [
-      checkTextLength(0, 140),
+      checkTextLength(Settings.MIN_DESC_LENGTH, Settings.MAX_DESC_LENGTH),
     ],
   },
   effect: {
@@ -42,10 +44,10 @@ const scheme = {
   hashtags: {
     asserts: [
       combineAsserts(
-          checkEveryTextLength(0, 20),
+          checkEveryTextLength(Settings.MIN_HASHTAG_LENGTH, Settings.MAX_HASHTAG_LENGTH),
           checkEveryWordIsUnique,
-          checkEveryWordStartsWith(`#`),
-          checkMaxWords(5),
+          checkEveryWordStartsWith(Settings.HASHTAG),
+          checkMaxWords(Settings.MAX_HASHTAGS),
       ),
     ],
   },
@@ -53,7 +55,7 @@ const scheme = {
     required: true,
     asserts: [
       checkInteger,
-      checkInRange(0, 100),
+      checkInRange(Settings.MIN_SCALE, Settings.MAX_SCALE),
     ],
   },
 };

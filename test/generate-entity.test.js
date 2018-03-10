@@ -1,17 +1,19 @@
 const assert = require(`assert`);
-const generateEntity = require(`../src/generate-entity.js`);
+const generateEntity = require(`../src/generate/generate-entity`);
+
+const Settings = require(`../src/settings`);
 
 const {
   COMMENTS,
   EFFECTS,
-} = require(`../src/data.js`);
+} = require(`../src/data`);
 
 const {
   eachIsInArray,
   eachLengthIsLt,
   eachStartsWithSymbol,
   eachIsUnique,
-} = require(`../src/utils.js`);
+} = require(`../src/utils`);
 
 describe(`generateEntity`, () => {
   let entity;
@@ -24,18 +26,27 @@ describe(`generateEntity`, () => {
     assert.equal(typeof entity, `object`);
   });
 
-  describe(`.url`, () => {
-    it(`should be equal to 'https://picsum.photos/600/?random'`, () => {
-      assert.equal(entity.url, `https://picsum.photos/600/?random`);
+  describe(`.description`, () => {
+    it(`should be string`, () => {
+      assert.equal(typeof entity.description, `string`);
+    });
+    it(`should be no more than 140 symbols`, () => {
+      assert(entity.description.length <= Settings.MAX_DESC_LENGTH);
+    });
+    it(`should be from COMMENTS list`, () => {
+      assert(COMMENTS.includes(entity.description));
     });
   });
 
-  describe(`.scale`, () => {
-    it(`should be integer`, () => {
-      assert(Number.isInteger(entity.scale));
+  describe(`.comments`, () => {
+    it(`should be array`, () => {
+      assert(Array.isArray(entity.comments));
     });
-    it(`should be in range between 0 and 100`, () => {
-      assert(entity.scale >= 0 && entity.scale <= 100);
+    it(`should contain elements less than 140 symbols each`, () => {
+      assert(eachLengthIsLt(entity.comments, Settings.MAX_COMMENT_LENGTH));
+    });
+    it(`should contain elements from COMMENTS list`, () => {
+      assert(eachIsInArray(entity.comments, COMMENTS));
     });
   });
 
@@ -46,32 +57,20 @@ describe(`generateEntity`, () => {
   });
 
   describe(`.hashtags`, () => {
-    it(`should be array`, () => {
-      assert(Array.isArray(entity.hashtags));
-    });
-    it(`should contain no more than 5 elements`, () => {
-      assert(entity.hashtags.length <= 5);
-    });
-    it(`should contain strings that starts with #`, () => {
-      assert(eachStartsWithSymbol(entity.hashtags, `#`));
-    });
-    it(`should contain unique elements`, () => {
-      assert(eachIsUnique(entity.hashtags));
-    });
-    it(`should contain elements less than 20 symbols each`, () => {
-      assert(eachLengthIsLt(entity.hashtags, 20));
-    });
-  });
-
-  describe(`.description`, () => {
     it(`should be string`, () => {
-      assert.equal(typeof entity.description, `string`);
+      assert(typeof entity.hashtags === `string`);
     });
-    it(`should be no more than 140 symbols`, () => {
-      assert(entity.description.length <= 140);
+    it(`should contain no more than 5 words`, () => {
+      assert(entity.hashtags.split(` `).length <= Settings.MAX_HASHTAGS);
     });
-    it(`should be from COMMENTS list`, () => {
-      assert(COMMENTS.includes(entity.description));
+    it(`should contain words that starts with #`, () => {
+      assert(eachStartsWithSymbol(entity.hashtags ? entity.hashtags.split(` `) : [], Settings.HASHTAG));
+    });
+    it(`should contain unique words`, () => {
+      assert(eachIsUnique(entity.hashtags.split(` `)));
+    });
+    it(`should contain words less than 20 symbols each`, () => {
+      assert(eachLengthIsLt(entity.hashtags.split(` `), Settings.MAX_HASHTAG_LENGTH));
     });
   });
 
@@ -80,19 +79,22 @@ describe(`generateEntity`, () => {
       assert(Number.isInteger(entity.likes));
     });
     it(`should be in range between 0 and 1000`, () => {
-      assert(entity.likes >= 0 && entity.likes <= 1000);
+      assert(entity.likes >= Settings.MIN_LIKES && entity.likes <= Settings.MAX_LIKES);
     });
   });
 
-  describe(`.comments`, () => {
-    it(`should be array`, () => {
-      assert(Array.isArray(entity.comments));
+  describe(`.scale`, () => {
+    it(`should be integer`, () => {
+      assert(Number.isInteger(entity.scale));
     });
-    it(`should contain elements less than 140 symbols each`, () => {
-      assert(eachLengthIsLt(entity.comments, 140));
+    it(`should be in range between 0 and 100`, () => {
+      assert(entity.scale >= Settings.MIN_SCALE && entity.scale <= Settings.MAX_SCALE);
     });
-    it(`should contain elements from COMMENTS list`, () => {
-      assert(eachIsInArray(entity.comments, COMMENTS));
+  });
+
+  describe(`.url`, () => {
+    it(`should look like /api/posts/DATE/image`, () => {
+      assert(/api\/posts\/\d+\/image/.test(entity.url));
     });
   });
 });

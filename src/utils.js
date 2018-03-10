@@ -1,3 +1,10 @@
+const {Duplex} = require(`stream`);
+
+const async = (fn) =>
+  (request, response, next) =>
+    fn(request, response, next)
+        .catch(next);
+
 const byName = (name) =>
   (array) =>
     array.name === name;
@@ -5,6 +12,15 @@ const byName = (name) =>
 const byDate = (date) =>
   (item) =>
     item.date === date;
+
+const createStreamFromBuffer = (buffer) => {
+  const stream = new Duplex();
+
+  stream.push(buffer);
+  stream.push(null);
+
+  return stream;
+};
 
 const eachIsInArray = (array, arrayToCompare) => {
   if (array.length === 0) {
@@ -85,8 +101,10 @@ const partial = (fn, ...currentArgs) =>
     fn(...currentArgs, ...laterArgs);
 
 module.exports = {
+  async,
   byDate,
   byName,
+  createStreamFromBuffer,
   eachIsInArray,
   eachIsUnique,
   eachLengthIsLt,

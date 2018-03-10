@@ -1,8 +1,8 @@
 const fs = require(`fs`);
 const readline = require(`readline`);
-const generateFormattedData = require(`./generate-data.js`);
-const createFile = require(`./create-file.js`);
-const {log} = require(`./utils.js`);
+const generateFormattedData = require(`../generate/generate-data`);
+const createFile = require(`../generate/create-file`);
+const {log} = require(`../utils`);
 
 const {promisify} = require(`util`);
 const open = promisify(fs.open);

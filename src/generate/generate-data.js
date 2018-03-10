@@ -3,7 +3,7 @@ const generateEntity = require(`./generate-entity`);
 const {
   pipe,
   partial,
-} = require(`./utils`);
+} = require(`../utils`);
 
 const generateData = (fn, count) =>
   [...Array(count)].map(fn);

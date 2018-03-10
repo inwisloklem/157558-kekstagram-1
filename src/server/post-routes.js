@@ -12,6 +12,7 @@ module.exports = (postStore, imageStore) => {
 
   router
       .use(bodyParser.json())
+      .use(controller.handleCORS)
 
       .get(`/`, controller.getAllPosts)
       .get(`/:date/image`, controller.getImage)

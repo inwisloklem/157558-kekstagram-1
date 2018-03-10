@@ -1,5 +1,7 @@
 const Errors = require(`./errors`);
 
+const logger = require(`./logger`);
+
 const {
   async,
   createStreamFromBuffer,
@@ -40,6 +42,7 @@ class PostController {
           .json(errors)
           .end();
 
+      logger.info(`Server responds w/ 400 Bad Request (validation errors).`);
       return;
     }
 
@@ -52,6 +55,8 @@ class PostController {
     response
         .status(200)
         .send(data);
+
+    logger.info(`Server responds w/ 200 OK (accepted data).`);
   }
 
   async getAllPosts(request, response) {
@@ -68,6 +73,7 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
+      logger.info(`Server responds w/ 400 Bad Request.`);
       return;
     }
 
@@ -81,6 +87,8 @@ class PostController {
     response
         .status(200)
         .json(data);
+
+    logger.info(`Server responds w/ 400 Bad Request.`);
   }
 
   async getImage(request, response) {
@@ -92,6 +100,7 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
+      logger.info(`Server responds w/ 400 Bad Request.`);
       return;
     }
 
@@ -104,6 +113,7 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
+      logger.info(`Server responds w/ 404 Not Found.`);
       return;
     }
 
@@ -118,6 +128,7 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
+      logger.info(`Server responds w/ 404 Not Found.`);
       return;
     }
 
@@ -125,6 +136,8 @@ class PostController {
         .set(`content-type`, filename.mimetype)
         .set(`content-length`, info.length)
         .status(200);
+
+    logger.info(`Server responds w/ 200 OK.`);
 
     stream
         .pipe(response);
@@ -139,6 +152,7 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
+      logger.info(`Server responds w/ 200 OK.`);
       return;
     }
 
@@ -151,12 +165,24 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
+      logger.info(`Server responds w/ 404 Not Found.`);
       return;
     }
 
     response
         .status(200)
         .json(post);
+
+    logger.info(`Server responds w/ 200 OK.`);
+  }
+
+  handleCORS(request, response, next) {
+    response
+        .header(`Access-Control-Allow-Origin`, `*`)
+        .header(`Access-Control-Allow-Headers`, `Origin, X-Requested-With, Content-Type, Accept`);
+
+    logger.info(`Server sets proper CORS headers.`);
+    next();
   }
 
   handleNotImplemented(request, response) {
@@ -164,6 +190,8 @@ class PostController {
         .status(501)
         .json([Errors.NOT_IMPLEMENTED])
         .end();
+
+    logger.info(`Server responds w/ 501 Not Implemented.`);
   }
 
   handleInternalServerError(exception, request, response, next) {
@@ -172,6 +200,7 @@ class PostController {
         .json([Errors.INTERNAL_SERVER_ERROR])
         .end();
 
+    logger.error(`Server responds w/ 500 Internal Server Error.`, exception);
     next();
   }
 }

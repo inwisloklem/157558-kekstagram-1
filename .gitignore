@@ -28,3 +28,7 @@ data/
 
 * Переменные окружения в файле
 .env
+
+* Логи
+combined.log
+error.log

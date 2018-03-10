@@ -25,9 +25,12 @@ module.exports = {
 
     const router = require(`../server/post-routes`)(postStore, imageStore);
 
+    const hostname = process.env.SERVER_HOST || Config.SERVER_HOST;
+    const port = process.env.SERVER_PORT || process.argv[3] || Config.SERVER_PORT;
+
     app
-        .set(`host`, Config.SERVER_HOST)
-        .set(`port`, process.argv[3] || Config.SERVER_PORT)
+        .set(`host`, hostname)
+        .set(`port`, port)
 
         .use(`/api/posts`, router)
         .use(express.static(`static`));

@@ -1,7 +1,9 @@
 const {MongoClient} = require(`mongodb`);
 const {log} = require(`../utils`);
 
-const url = `mongodb://localhost:27017`;
+const {DB_HOST} = require(`../config.js`);
+
+const url = process.env.DB_HOST || DB_HOST;
 
 const initMainDb = () => MongoClient
     .connect(url)

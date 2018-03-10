@@ -19,8 +19,8 @@ module.exports = (postStore, imageStore) => {
 
       .post(`/`, upload.single(`filename`), controller.createPost)
 
-      .use(controller.handleInternalServerError)
-      .all(`*`, controller.handleNotImplemented);
+      .all(`*`, controller.handleNotImplemented)
+      .use(controller.handleInternalServerError);
 
   return router;
 };

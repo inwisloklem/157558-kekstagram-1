@@ -1,15 +1,3 @@
-const mainDb = require(`./database`);
-const {log} = require(`../utils`);
-
-const setupCollection = async () => {
-  const dBase = await mainDb;
-
-  const collection = dBase.collection(`posts`);
-  collection.createIndex({date: -1}, {unique: true});
-
-  return collection;
-};
-
 class PostStore {
   constructor(collection) {
     this.collection = collection;
@@ -31,7 +19,4 @@ class PostStore {
   }
 }
 
-module.exports = new PostStore(
-    setupCollection()
-        .catch((e) => log({message: `Failed to setup collecton: ${e}`, type: `error`}))
-);
+module.exports = PostStore;

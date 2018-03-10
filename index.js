@@ -16,6 +16,8 @@ const commandsList = [
   require(`./src/cli/version`),
 ];
 
+require(`dotenv`).config();
+
 const getOption = (options) => {
   if (options.length > 2) {
     return options[2].slice(2);

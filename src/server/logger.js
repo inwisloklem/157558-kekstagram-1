@@ -9,7 +9,7 @@ const {
 } = winston.format;
 
 const logger = winston.createLogger({
-  level: process.env.SERVER_LOG_LEVEL || `info`,
+  level: process.env.SERVER_LOG_LEVEL.toLowerCase() || `info`,
   format: winston.format.json(),
   transports: [
     new winston.transports.File({filename: `error.log`, level: `error`}),

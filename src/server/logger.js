@@ -35,8 +35,7 @@ if (process.env.NODE_ENV !== `production`) {
 }
 
 const mockLogger = {
-  info() {},
-  error() {},
+  log() {},
 };
 
 module.exports = (process.env.NODE_ENV !== `test`) ? logger : mockLogger;

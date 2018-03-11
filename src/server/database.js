@@ -1,7 +1,7 @@
 const {MongoClient} = require(`mongodb`);
 const logger = require(`./logger`);
 
-const {DB_HOST} = require(`../config.js`);
+const {DB_HOST} = require(`../config`);
 
 const url = process.env.DB_HOST || DB_HOST;
 

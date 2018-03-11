@@ -21,7 +21,7 @@ module.exports = {
 
     const postStore = new PostStore(
         setupCollection(initMainDb)
-            .catch((e) => logger.error(`Fails to setup collection`, e))
+            .catch((e) => logger.error(`Failed to setup collection.`, {details: {error: e}}))
     );
 
     const imageStore = new ImageStore();

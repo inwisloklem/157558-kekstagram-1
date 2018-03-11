@@ -11,6 +11,8 @@ const setupCollection = require(`../server/setup`);
 
 const Config = require(`../config`);
 
+require(`dotenv`).config();
+
 module.exports = {
   name: `server`,
   description: `Starts local server`,

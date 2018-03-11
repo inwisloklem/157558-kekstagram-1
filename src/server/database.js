@@ -3,6 +3,8 @@ const logger = require(`./logger`);
 
 const {DB_HOST} = require(`../config`);
 
+require(`dotenv`).config();
+
 const url = process.env.DB_HOST || DB_HOST;
 
 const initMainDb = () => MongoClient

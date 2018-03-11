@@ -1,5 +1,7 @@
 const winston = require(`winston`);
 
+require(`dotenv`).config();
+
 const {
   combine,
   timestamp,

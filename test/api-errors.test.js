@@ -4,17 +4,17 @@ const app = require(`express`)();
 
 const Errors = require(`../src/server/errors`);
 
+const mockImageStore = require(`./mock/mock-image-store`);
+
+const mockRouter = require(`../src/server/post-routes`);
+
 const mockPostStore = {
   getAllPosts() {
     throw new Error();
   }
 };
 
-const mockImageStore = require(`./mock/mock-image-store`);
-
-const mockRouter = require(`../src/server/post-routes`)(mockPostStore, mockImageStore);
-
-app.use(`/api/posts`, mockRouter);
+app.use(`/api/posts`, mockRouter(mockPostStore, mockImageStore));
 
 describe(`GET /api/posts (w/ broken store method)`, () => {
   it(`should respond w/ 500 Internal Server Error`, () => {

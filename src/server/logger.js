@@ -22,13 +22,9 @@ const logger = winston.createLogger({
   format: printf((info) => `${prettyPrint(info)},`),
   transports: [
     new winston.transports.File({filename: `error.log`, level: `error`}),
-    new winston.transports.File({filename: `combined.log`, level: `silly`}),
     new winston.transports.File({filename: `combined.log`, level: `info`}),
   ]
 });
-
-logger.silly = (...args) =>
-  logger.log(`silly`, ...args);
 
 if (process.env.NODE_ENV !== `production`) {
   logger.add(new winston.transports.Console({format}));

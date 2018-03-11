@@ -53,8 +53,7 @@ class PostController {
           .json(errors)
           .end();
 
-      logger.info(Messages.BAD_REQUEST_VALIDATION);
-      logger.silly(Messages.DETAILS, {details: {data, errors}});
+      logger.info(Messages.BAD_REQUEST_VALIDATION, {details: {data, errors}});
       return;
     }
 
@@ -68,8 +67,7 @@ class PostController {
         .status(200)
         .send(data);
 
-    logger.info(Messages.OK_ACCEPTED);
-    logger.silly(Messages.DETAILS, {details: {data}});
+    logger.info(Messages.OK_ACCEPTED, {details: {data}});
   }
 
   async getAllPosts(request, response) {
@@ -86,8 +84,7 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
-      logger.info(Messages.BAD_REQUEST);
-      logger.silly(Messages.DETAILS, {details: {skip, limit}});
+      logger.info(Messages.BAD_REQUEST, {details: {skip, limit}});
       return;
     }
 
@@ -102,8 +99,7 @@ class PostController {
         .status(200)
         .json(data);
 
-    logger.info(Messages.OK);
-    logger.silly(Messages.DETAILS, {details: {data}});
+    logger.info(Messages.OK, {details: {data}});
   }
 
   async getImage(request, response) {
@@ -115,8 +111,7 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
-      logger.info(Messages.BAD_REQUEST);
-      logger.silly(Messages.DETAILS, {details: {date}});
+      logger.info(Messages.BAD_REQUEST, {details: {date}});
       return;
     }
 
@@ -129,8 +124,7 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
-      logger.info(Messages.NOT_FOUND);
-      logger.silly(Messages.DETAILS, {details: {date}});
+      logger.info(Messages.NOT_FOUND, {details: {date}});
       return;
     }
 
@@ -145,8 +139,7 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
-      logger.info(Messages.NOT_FOUND);
-      logger.silly(Messages.DETAILS, {details: {filename, info}});
+      logger.info(Messages.DETAILS, {details: {filename, info}});
       return;
     }
 
@@ -155,8 +148,7 @@ class PostController {
         .set(`content-length`, info.length)
         .status(200);
 
-    logger.info(Messages.OK);
-    logger.silly(Messages.DETAILS, {details: {filename, info}});
+    logger.info(Messages.OK, {details: {filename, info}});
 
     stream
         .pipe(response);
@@ -171,8 +163,7 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
-      logger.info(Messages.BAD_REQUEST);
-      logger.silly(Messages.DETAILS, {details: {date}});
+      logger.info(Messages.BAD_REQUEST, {details: {date}});
       return;
     }
 
@@ -185,8 +176,7 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
-      logger.info(Messages.NOT_FOUND);
-      logger.silly(Messages.DETAILS, {details: {date}});
+      logger.info(Messages.NOT_FOUND, {details: {date}});
       return;
     }
 
@@ -194,8 +184,7 @@ class PostController {
         .status(200)
         .json(post);
 
-    logger.info(Messages.OK);
-    logger.silly(Messages.DETAILS, {details: {post}});
+    logger.info(Messages.OK, {details: {post}});
   }
 
   handleCORS(request, response, next) {
@@ -212,8 +201,7 @@ class PostController {
         .json([Errors.NOT_IMPLEMENTED])
         .end();
 
-    logger.info(Messages.NOT_IMPLEMENTED);
-    logger.silly(Messages.DETAILS, {details: {url: request.url}});
+    logger.info(Messages.NOT_IMPLEMENTED, {details: {url: request.url}});
   }
 
   handleInternalServerError(exception, request, response, next) {

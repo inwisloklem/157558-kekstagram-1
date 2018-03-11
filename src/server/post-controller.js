@@ -2,6 +2,17 @@ const Errors = require(`./errors`);
 
 const logger = require(`./logger`);
 
+const Messages = {
+  OK: `Server responded 200 OK.`,
+  OK_ACCEPTED: `Server responded 200 OK (accepted data).`,
+  BAD_REQUEST: `Server responded 400 Bad Request.`,
+  BAD_REQUEST_VALIDATION: `Server responded 400 Bad Request (validation errors).`,
+  NOT_FOUND: `Server responded 404 Not Found.`,
+  NOT_IMPLEMENTED: `Server responded 501 Not Implemented.`,
+  INTERNAL_SERVER_ERROR: `Server responded 500 Internal Server Error.`,
+  DETAILS: `Details object:`
+};
+
 const {
   async,
   createStreamFromBuffer,
@@ -42,7 +53,8 @@ class PostController {
           .json(errors)
           .end();
 
-      logger.info(`Server responds w/ 400 Bad Request (validation errors).`);
+      logger.info(Messages.BAD_REQUEST_VALIDATION);
+      logger.silly(Messages.DETAILS, {details: {data, errors}});
       return;
     }
 
@@ -56,7 +68,8 @@ class PostController {
         .status(200)
         .send(data);
 
-    logger.info(`Server responds w/ 200 OK (accepted data).`);
+    logger.info(Messages.OK_ACCEPTED);
+    logger.silly(Messages.DETAILS, {details: {data}});
   }
 
   async getAllPosts(request, response) {
@@ -73,7 +86,8 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
-      logger.info(`Server responds w/ 400 Bad Request.`);
+      logger.info(Messages.BAD_REQUEST);
+      logger.silly(Messages.DETAILS, {details: {skip, limit}});
       return;
     }
 
@@ -88,7 +102,8 @@ class PostController {
         .status(200)
         .json(data);
 
-    logger.info(`Server responds w/ 400 Bad Request.`);
+    logger.info(Messages.OK);
+    logger.silly(Messages.DETAILS, {details: {data}});
   }
 
   async getImage(request, response) {
@@ -100,7 +115,8 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
-      logger.info(`Server responds w/ 400 Bad Request.`);
+      logger.info(Messages.BAD_REQUEST);
+      logger.silly(Messages.DETAILS, {details: {date}});
       return;
     }
 
@@ -113,7 +129,8 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
-      logger.info(`Server responds w/ 404 Not Found.`);
+      logger.info(Messages.NOT_FOUND);
+      logger.silly(Messages.DETAILS, {details: {date}});
       return;
     }
 
@@ -128,7 +145,8 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
-      logger.info(`Server responds w/ 404 Not Found.`);
+      logger.info(Messages.NOT_FOUND);
+      logger.silly(Messages.DETAILS, {details: {filename, info}});
       return;
     }
 
@@ -137,7 +155,8 @@ class PostController {
         .set(`content-length`, info.length)
         .status(200);
 
-    logger.info(`Server responds w/ 200 OK.`);
+    logger.info(Messages.OK);
+    logger.silly(Messages.DETAILS, {details: {filename, info}});
 
     stream
         .pipe(response);
@@ -152,7 +171,8 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
-      logger.info(`Server responds w/ 200 OK.`);
+      logger.info(Messages.BAD_REQUEST);
+      logger.silly(Messages.DETAILS, {details: {date}});
       return;
     }
 
@@ -165,7 +185,8 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
-      logger.info(`Server responds w/ 404 Not Found.`);
+      logger.info(Messages.NOT_FOUND);
+      logger.silly(Messages.DETAILS, {details: {date}});
       return;
     }
 
@@ -173,7 +194,8 @@ class PostController {
         .status(200)
         .json(post);
 
-    logger.info(`Server responds w/ 200 OK.`);
+    logger.info(Messages.OK);
+    logger.silly(Messages.DETAILS, {details: {post}});
   }
 
   handleCORS(request, response, next) {
@@ -181,7 +203,6 @@ class PostController {
         .header(`Access-Control-Allow-Origin`, `*`)
         .header(`Access-Control-Allow-Headers`, `Origin, X-Requested-With, Content-Type, Accept`);
 
-    logger.info(`Server sets proper CORS headers.`);
     next();
   }
 
@@ -191,7 +212,8 @@ class PostController {
         .json([Errors.NOT_IMPLEMENTED])
         .end();
 
-    logger.info(`Server responds w/ 501 Not Implemented.`);
+    logger.info(Messages.NOT_IMPLEMENTED);
+    logger.silly(Messages.DETAILS, {details: {url: request.url}});
   }
 
   handleInternalServerError(exception, request, response, next) {
@@ -200,7 +222,7 @@ class PostController {
         .json([Errors.INTERNAL_SERVER_ERROR])
         .end();
 
-    logger.error(`Server responds w/ 500 Internal Server Error.`, exception);
+    logger.error(Messages.INTERNAL_SERVER_ERROR, {details: {exception}});
     next();
   }
 }

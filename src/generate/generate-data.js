@@ -13,4 +13,7 @@ const formatData = (data) =>
 
 const generateFormattedData = partial(pipe(generateData, formatData), generateEntity);
 
-module.exports = generateFormattedData;
+module.exports = {
+  generateData,
+  generateFormattedData,
+};

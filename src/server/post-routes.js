@@ -12,7 +12,7 @@ module.exports = (postStore, imageStore) => {
 
   router
       .use(bodyParser.json())
-      .use(controller.handleCORS)
+      .use(PostController.handleCORS)
 
       .get(`/`, controller.getAllPosts)
       .get(`/:date/image`, controller.getImage)
@@ -20,8 +20,8 @@ module.exports = (postStore, imageStore) => {
 
       .post(`/`, upload.single(`filename`), controller.createPost)
 
-      .all(`*`, controller.handleNotImplemented)
-      .use(controller.handleInternalServerError);
+      .all(`*`, PostController.handleNotImplemented)
+      .use(PostController.handleInternalServerError);
 
   return router;
 };

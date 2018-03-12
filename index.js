@@ -8,9 +8,10 @@ const {
 
 const commandsList = [
   require(`./src/cli/author`),
-  require(`./src/cli/default`),
-  require(`./src/cli/description`),
   require(`./src/cli/help`),
+  require(`./src/cli/description`),
+  require(`./src/cli/generate`),
+  require(`./src/cli/fill`),
   require(`./src/cli/license`),
   require(`./src/cli/server`),
   require(`./src/cli/version`),
@@ -22,7 +23,7 @@ const getOption = (options) => {
   if (options.length > 2) {
     return options[2].slice(2);
   }
-  return `default`;
+  return `help`;
 };
 
 const findCommandByName = (cliArguments) =>

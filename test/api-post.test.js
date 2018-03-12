@@ -4,6 +4,8 @@ const request = require(`supertest`);
 
 const app = require(`express`)();
 
+const assert = require(`assert`);
+
 const mockPostStore = require(`./mock/mock-post-store`);
 const mockImageStore = require(`./mock/mock-image-store`);
 
@@ -15,31 +17,31 @@ describe(`POST api/posts`, () => {
   it(`should accept valid multipart/form-data`, () => {
     return request(app)
         .post(`/api/posts`)
-        .field(`date`, `1520589389481`)
         .field(`description`, `Wonderful depth and focus!`)
         .field(`effect`, `none`)
         .field(`hashtags`, `#pleasure #breakfast`)
         .field(`likes`, 650)
         .field(`scale`, 87)
         .attach(`filename`, `./test/fixtures/image.png`)
-        .expect(200, {
-          date: 1520589389481,
-          description: `Wonderful depth and focus!`,
-          effect: `none`,
-          filename: {
-            path: `/photos/1520589389481`,
-            mimetype: `image/png`
-          },
-          hashtags: `#pleasure #breakfast`,
-          likes: 650,
-          scale: 87,
-          url: `/api/posts/1520589389481/image`,
+        .expect(200)
+        .then((response) => {
+          const data = response.body;
+
+          assert(/\d+/.test(data.date));
+          assert.equal(data.description, `Wonderful depth and focus!`);
+          assert.equal(data.effect, `none`);
+          assert.equal(data.hashtags, `#pleasure #breakfast`);
+          assert.equal(data.likes, 650);
+          assert.equal(data.scale, 87);
+          assert.equal(data.filename.mimetype, `image/png`);
+
+          assert(/photos\/\d+/.test(data.filename.path));
+          assert(/api\/posts\/\d+\/image/.test(data.url));
         });
   });
 
   it(`should validate data (test case 1)`, () => {
     const INVALID_DATA = {
-      date: `-666`,
       description: `Fantastic view! Fantastic view! Fantastic view! Fantastic view! Fantastic view! Fantastic view! Fantastic view! Fantastic view! Fantastic view! Fantastic view! Fantastic view! Fantastic view! Fantastic view!`,
       effect: `horrible`,
       hashtags: `#academy #food #academy #breakfastbreakfastbreakfastbreakfastbreakfast #pleasure #food #academy`,
@@ -47,11 +49,6 @@ describe(`POST api/posts`, () => {
     };
 
     const EXPECTED_ERRORS = [
-      {
-        error: `Validation Error`,
-        field: `date`,
-        errorMessage: `is less than min value 0`,
-      },
       {
         error: `Validation Error`,
         field: `description`,
@@ -104,11 +101,6 @@ describe(`POST api/posts`, () => {
     };
 
     const EXPECTED_ERRORS = [
-      {
-        error: `Validation Error`,
-        field: `date`,
-        errorMessage: `is required`,
-      },
       {
         error: `Validation Error`,
         field: `effect`,

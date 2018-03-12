@@ -2,6 +2,8 @@ const Errors = require(`./errors`);
 
 const logger = require(`./logger`);
 
+const render = require(`./renderer`);
+
 const Messages = {
   OK: `Server responded 200 OK.`,
   OK_ACCEPTED: `Server responded 200 OK (accepted data).`,
@@ -48,10 +50,8 @@ class PostController {
     const errors = validate(data, scheme);
 
     if (errors.length > 0) {
-      response
-          .status(400)
-          .json(errors)
-          .end();
+      response.status(400);
+      render(request, response, errors);
 
       logger.info(Messages.BAD_REQUEST_VALIDATION, {details: {data, errors}});
       return;
@@ -63,9 +63,8 @@ class PostController {
     await this.postStore
         .savePost(data);
 
-    response
-        .status(200)
-        .send(data);
+    response.status(200);
+    render(request, response, data);
 
     logger.info(Messages.OK_ACCEPTED, {details: {data}});
   }
@@ -79,10 +78,8 @@ class PostController {
     [skip, limit] = [Number(skip), Number(limit)];
 
     if (!Number.isInteger(skip) || !Number.isInteger(limit) || skip < 0 || limit < 1) {
-      response
-          .status(400)
-          .json([Errors.BAD_REQUEST])
-          .end();
+      response.status(400);
+      render(request, response, [Errors.BAD_REQUEST]);
 
       logger.info(Messages.BAD_REQUEST, {details: {skip, limit}});
       return;
@@ -95,9 +92,8 @@ class PostController {
         .skip(skip).limit(limit)
         .toArray();
 
-    response
-        .status(200)
-        .json(data);
+    response.status(200);
+    render(request, response, data);
 
     logger.info(Messages.OK, {details: {data}});
   }
@@ -106,10 +102,8 @@ class PostController {
     const date = request.params.date;
 
     if (!Number.isInteger(Number(request.params.date))) {
-      response
-          .status(400)
-          .json([Errors.BAD_REQUEST])
-          .end();
+      response.status(400);
+      render(request, response, [Errors.BAD_REQUEST]);
 
       logger.info(Messages.BAD_REQUEST, {details: {date}});
       return;
@@ -119,10 +113,8 @@ class PostController {
         .getPostByQuery({date: String(date)});
 
     if (!post) {
-      response
-          .status(404)
-          .json([Errors.NOT_FOUND])
-          .end();
+      response.status(404);
+      render(request, response, [Errors.NOT_FOUND]);
 
       logger.info(Messages.NOT_FOUND, {details: {date}});
       return;
@@ -134,10 +126,8 @@ class PostController {
         .get(filename.path);
 
     if (!filename || !info || !stream) {
-      response
-          .status(404)
-          .json([Errors.NOT_FOUND])
-          .end();
+      response.status(404);
+      render(request, response, [Errors.NOT_FOUND]);
 
       logger.info(Messages.DETAILS, {details: {filename, info}});
       return;
@@ -158,10 +148,8 @@ class PostController {
     const date = request.params.date;
 
     if (!Number.isInteger(Number(request.params.date))) {
-      response
-          .status(400)
-          .json([Errors.BAD_REQUEST])
-          .end();
+      response.status(400);
+      render(request, response, [Errors.BAD_REQUEST]);
 
       logger.info(Messages.BAD_REQUEST, {details: {date}});
       return;
@@ -171,18 +159,15 @@ class PostController {
         .getPostByQuery({date: String(date)});
 
     if (!post) {
-      response
-          .status(404)
-          .json([Errors.NOT_FOUND])
-          .end();
+      response.status(404);
+      render(request, response, [Errors.NOT_FOUND]);
 
       logger.info(Messages.NOT_FOUND, {details: {date}});
       return;
     }
 
-    response
-        .status(200)
-        .json(post);
+    response.status(200);
+    render(request, response, post);
 
     logger.info(Messages.OK, {details: {post}});
   }
@@ -196,19 +181,15 @@ class PostController {
   }
 
   handleNotImplemented(request, response) {
-    response
-        .status(501)
-        .json([Errors.NOT_IMPLEMENTED])
-        .end();
+    response.status(501);
+    render(request, response, [Errors.NOT_IMPLEMENTED]);
 
     logger.info(Messages.NOT_IMPLEMENTED, {details: {url: request.url}});
   }
 
   handleInternalServerError(exception, request, response, next) {
-    response
-        .status(500)
-        .json([Errors.INTERNAL_SERVER_ERROR])
-        .end();
+    response.status(500);
+    render(request, response, [Errors.INTERNAL_SERVER_ERROR]);
 
     logger.error(Messages.INTERNAL_SERVER_ERROR, {details: {exception}});
     next();

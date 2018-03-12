@@ -1,6 +1,7 @@
 const express = require(`express`);
 
 const {log} = require(`../utils`);
+const logger = require(`../server/logger`);
 
 const PostStore = require(`../server/post-store`);
 const ImageStore = require(`../server/image-store`);
@@ -10,6 +11,8 @@ const setupCollection = require(`../server/setup`);
 
 const Config = require(`../config`);
 
+require(`dotenv`).config();
+
 module.exports = {
   name: `server`,
   description: `Starts local server`,
@@ -18,16 +21,19 @@ module.exports = {
 
     const postStore = new PostStore(
         setupCollection(initMainDb)
-            .catch((e) => log({message: `Failed to setup collecton: ${e}`, type: `error`}))
+            .catch((e) => logger.error(`Failed to setup collection.`, {details: {error: e}}))
     );
 
     const imageStore = new ImageStore();
 
     const router = require(`../server/post-routes`)(postStore, imageStore);
 
+    const hostname = process.env.SERVER_HOST || Config.SERVER_HOST;
+    const port = process.env.SERVER_PORT || process.argv[3] || Config.SERVER_PORT;
+
     app
-        .set(`host`, Config.SERVER_HOST)
-        .set(`port`, process.argv[3] || Config.SERVER_PORT)
+        .set(`host`, hostname)
+        .set(`port`, port)
 
         .use(`/api/posts`, router)
         .use(express.static(`static`));

@@ -100,6 +100,9 @@ const partial = (fn, ...currentArgs) =>
   (...laterArgs) =>
     fn(...currentArgs, ...laterArgs);
 
+const prettyPrint = (object) =>
+  JSON.stringify(object, null, 2);
+
 module.exports = {
   async,
   byDate,
@@ -115,4 +118,5 @@ module.exports = {
   log,
   pipe,
   partial,
+  prettyPrint,
 };

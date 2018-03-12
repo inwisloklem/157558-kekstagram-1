@@ -1,3 +1,5 @@
+process.env.NODE_ENV = `test`;
+
 const request = require(`supertest`);
 
 const app = require(`express`)();
@@ -10,9 +12,9 @@ const {byDate} = require(`../src/utils`);
 const mockPostStore = require(`./mock/mock-post-store`);
 const mockImageStore = require(`./mock/mock-image-store`);
 
-const mockRouter = require(`../src/server/post-routes`)(mockPostStore, mockImageStore);
+const mockRouter = require(`../src/server/post-routes`);
 
-app.use(`/api/posts`, mockRouter);
+app.use(`/api/posts`, mockRouter(mockPostStore, mockImageStore));
 
 describe(`GET /api/posts`, () => {
   it(`should respond w/ same JSON data as in mock file (limit: 15)`, () => {

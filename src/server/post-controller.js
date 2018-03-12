@@ -1,5 +1,18 @@
 const Errors = require(`./errors`);
 
+const logger = require(`./logger`);
+
+const Messages = {
+  OK: `Server responded 200 OK.`,
+  OK_ACCEPTED: `Server responded 200 OK (accepted data).`,
+  BAD_REQUEST: `Server responded 400 Bad Request.`,
+  BAD_REQUEST_VALIDATION: `Server responded 400 Bad Request (validation errors).`,
+  NOT_FOUND: `Server responded 404 Not Found.`,
+  NOT_IMPLEMENTED: `Server responded 501 Not Implemented.`,
+  INTERNAL_SERVER_ERROR: `Server responded 500 Internal Server Error.`,
+  DETAILS: `Details object:`
+};
+
 const {
   async,
   createStreamFromBuffer,
@@ -40,6 +53,7 @@ class PostController {
           .json(errors)
           .end();
 
+      logger.info(Messages.BAD_REQUEST_VALIDATION, {details: {data, errors}});
       return;
     }
 
@@ -52,6 +66,8 @@ class PostController {
     response
         .status(200)
         .send(data);
+
+    logger.info(Messages.OK_ACCEPTED, {details: {data}});
   }
 
   async getAllPosts(request, response) {
@@ -68,6 +84,7 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
+      logger.info(Messages.BAD_REQUEST, {details: {skip, limit}});
       return;
     }
 
@@ -81,6 +98,8 @@ class PostController {
     response
         .status(200)
         .json(data);
+
+    logger.info(Messages.OK, {details: {data}});
   }
 
   async getImage(request, response) {
@@ -92,6 +111,7 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
+      logger.info(Messages.BAD_REQUEST, {details: {date}});
       return;
     }
 
@@ -104,6 +124,7 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
+      logger.info(Messages.NOT_FOUND, {details: {date}});
       return;
     }
 
@@ -118,6 +139,7 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
+      logger.info(Messages.DETAILS, {details: {filename, info}});
       return;
     }
 
@@ -125,6 +147,8 @@ class PostController {
         .set(`content-type`, filename.mimetype)
         .set(`content-length`, info.length)
         .status(200);
+
+    logger.info(Messages.OK, {details: {filename, info}});
 
     stream
         .pipe(response);
@@ -139,6 +163,7 @@ class PostController {
           .json([Errors.BAD_REQUEST])
           .end();
 
+      logger.info(Messages.BAD_REQUEST, {details: {date}});
       return;
     }
 
@@ -151,12 +176,23 @@ class PostController {
           .json([Errors.NOT_FOUND])
           .end();
 
+      logger.info(Messages.NOT_FOUND, {details: {date}});
       return;
     }
 
     response
         .status(200)
         .json(post);
+
+    logger.info(Messages.OK, {details: {post}});
+  }
+
+  handleCORS(request, response, next) {
+    response
+        .header(`Access-Control-Allow-Origin`, `*`)
+        .header(`Access-Control-Allow-Headers`, `Origin, X-Requested-With, Content-Type, Accept`);
+
+    next();
   }
 
   handleNotImplemented(request, response) {
@@ -164,6 +200,8 @@ class PostController {
         .status(501)
         .json([Errors.NOT_IMPLEMENTED])
         .end();
+
+    logger.info(Messages.NOT_IMPLEMENTED, {details: {url: request.url}});
   }
 
   handleInternalServerError(exception, request, response, next) {
@@ -172,6 +210,7 @@ class PostController {
         .json([Errors.INTERNAL_SERVER_ERROR])
         .end();
 
+    logger.error(Messages.INTERNAL_SERVER_ERROR, {details: {exception}});
     next();
   }
 }

@@ -1,13 +1,21 @@
 const {MongoClient} = require(`mongodb`);
-const {log} = require(`../utils`);
+const logger = require(`./logger`);
 
-const url = `mongodb://localhost:27017`;
+const {DB_HOST} = require(`../config`);
+
+require(`dotenv`).config();
+
+const url = process.env.DB_HOST || DB_HOST;
 
 const initMainDb = () => MongoClient
     .connect(url)
-    .then((client) => client.db(`kekstagram`))
+    .then(
+        (client) => {
+          logger.info(`Connected to database.`);
+          return client.db(`kekstagram`);
+        })
     .catch((e) => {
-      log({message: `Failed to connect to database: ${e}`, type: `error`});
+      logger.error(`Failed to connect to database.`, {details: {error: e}});
       process.exit(1);
     });
 

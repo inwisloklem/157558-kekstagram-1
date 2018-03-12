@@ -1,3 +1,5 @@
+process.env.NODE_ENV = `test`;
+
 const request = require(`supertest`);
 
 const app = require(`express`)();
@@ -5,9 +7,9 @@ const app = require(`express`)();
 const mockPostStore = require(`./mock/mock-post-store`);
 const mockImageStore = require(`./mock/mock-image-store`);
 
-const mockRouter = require(`../src/server/post-routes`)(mockPostStore, mockImageStore);
+const mockRouter = require(`../src/server/post-routes`);
 
-app.use(`/api/posts`, mockRouter);
+app.use(`/api/posts`, mockRouter(mockPostStore, mockImageStore));
 
 describe(`POST api/posts`, () => {
   it(`should accept valid multipart/form-data`, () => {

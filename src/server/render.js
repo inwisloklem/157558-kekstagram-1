@@ -1,5 +1,7 @@
 const {prettyPrint} = require(`../utils`);
 
+const ACCEPT_TYPES = [`json`, `html`];
+
 const makeHtml = (data) =>
   `<!DOCTYPE html>
     <html lang="ru">
@@ -13,7 +15,7 @@ const makeHtml = (data) =>
   </html>`;
 
 const render = (request, response, data) => {
-  switch (request.accepts([`json`, `html`])) {
+  switch (request.accepts(ACCEPT_TYPES)) {
     case `html`:
       response.set(`Content-Type`, `text/html`);
       response.send(makeHtml(data));

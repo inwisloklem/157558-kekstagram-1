@@ -1,5 +1,7 @@
 const generateEntity = require(`./generate-entity`);
 
+const {prettyPrint} = require(`../utils`);
+
 const {
   pipe,
   partialApply,
@@ -8,10 +10,7 @@ const {
 const generateData = (fn, count) =>
   [...Array(count)].map(fn);
 
-const formatData = (data) =>
-  JSON.stringify(data, null, 2);
-
-const generateFormattedData = partialApply(pipe(generateData, formatData), generateEntity);
+const generateFormattedData = partialApply(pipe(generateData, prettyPrint), generateEntity);
 
 module.exports = {
   generateData,

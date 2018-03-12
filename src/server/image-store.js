@@ -1,5 +1,5 @@
 const mongodb = require(`mongodb`);
-const initMainDb = require(`./database`);
+const connectDb = require(`./connect-database`);
 
 class ImageStore {
   async getBucket() {
@@ -7,7 +7,7 @@ class ImageStore {
       return this._bucket;
     }
 
-    const dBase = await initMainDb();
+    const dBase = await connectDb();
 
     if (!this._bucket) {
       this._bucket = new mongodb.GridFSBucket(dBase, {

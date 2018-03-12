@@ -6,8 +6,10 @@ const logger = require(`../server/logger`);
 const PostStore = require(`../server/post-store`);
 const ImageStore = require(`../server/image-store`);
 
-const initMainDb = require(`../server/database`);
-const setupCollection = require(`../server/setup`);
+const router = require(`../server/post-routes`);
+
+const connectDb = require(`../server/connect-database`);
+const setupCollection = require(`../server/setup-collection`);
 
 const Config = require(`../config`);
 
@@ -20,13 +22,11 @@ module.exports = {
     const app = express();
 
     const postStore = new PostStore(
-        setupCollection(initMainDb)
+        setupCollection(connectDb)
             .catch((e) => logger.error(`Failed to setup collection.`, {details: {error: e}}))
     );
 
     const imageStore = new ImageStore();
-
-    const router = require(`../server/post-routes`)(postStore, imageStore);
 
     const hostname = process.env.SERVER_HOST || Config.SERVER_HOST;
     const port = process.env.SERVER_PORT || process.argv[3] || Config.SERVER_PORT;
@@ -35,7 +35,7 @@ module.exports = {
         .set(`host`, hostname)
         .set(`port`, port)
 
-        .use(`/api/posts`, router)
+        .use(`/api/posts`, router(postStore, imageStore))
         .use(express.static(`static`));
 
     app.listen(app.get(`port`), () => log({

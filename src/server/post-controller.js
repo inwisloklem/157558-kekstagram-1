@@ -2,7 +2,7 @@ const Errors = require(`./errors`);
 
 const logger = require(`./logger`);
 
-const render = require(`./renderer`);
+const render = require(`./render`);
 
 const Messages = {
   OK: `Server responded 200 OK.`,
@@ -12,7 +12,6 @@ const Messages = {
   NOT_FOUND: `Server responded 404 Not Found.`,
   NOT_IMPLEMENTED: `Server responded 501 Not Implemented.`,
   INTERNAL_SERVER_ERROR: `Server responded 500 Internal Server Error.`,
-  DETAILS: `Details object:`
 };
 
 const {
@@ -25,8 +24,8 @@ const scheme = require(`./post-scheme`);
 
 class PostController {
   constructor(postStore, imageStore) {
-    this.postStore = postStore;
-    this.imageStore = imageStore;
+    this._postStore = postStore;
+    this._imageStore = imageStore;
 
     this.createPost = async(this.createPost.bind(this));
     this.getAllPosts = async(this.getAllPosts.bind(this));
@@ -57,10 +56,10 @@ class PostController {
       return;
     }
 
-    await this.imageStore
+    await this._imageStore
         .save(data.filename.path, createStreamFromBuffer(image.buffer));
 
-    await this.postStore
+    await this._postStore
         .savePost(data);
 
     response.status(200);
@@ -85,7 +84,7 @@ class PostController {
       return;
     }
 
-    const cursor = await this.postStore
+    const cursor = await this._postStore
         .getAllPosts();
 
     const data = await cursor
@@ -109,7 +108,7 @@ class PostController {
       return;
     }
 
-    const post = await this.postStore
+    const post = await this._postStore
         .getPostByQuery({date: String(date)});
 
     if (!post) {
@@ -122,7 +121,7 @@ class PostController {
 
     const {filename} = post;
 
-    const {info, stream} = await this.imageStore
+    const {info, stream} = await this._imageStore
         .get(filename.path);
 
     if (!filename || !info || !stream) {
@@ -155,7 +154,7 @@ class PostController {
       return;
     }
 
-    const post = await this.postStore
+    const post = await this._postStore
         .getPostByQuery({date: String(date)});
 
     if (!post) {

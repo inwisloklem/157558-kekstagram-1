@@ -1,5 +1,5 @@
-const initMainDb = require(`../server/database`);
-const setupCollection = require(`../server/setup`);
+const connectDb = require(`../server/connect-database`);
+const setupCollection = require(`../server/setup-collection`);
 
 const generateEntity = require(`../generate/generate-entity`);
 const {generateData} = require(`../generate/generate-data`);
@@ -10,10 +10,10 @@ const {log} = require(`../utils`);
 const DATA_AMOUNT = 100;
 
 const fillDb = async () => {
-  const collection = await setupCollection(initMainDb);
+  const collection = await setupCollection(connectDb);
   const data = generateData(generateEntity, DATA_AMOUNT);
 
-  collection
+  await collection
       .insertMany(data);
 
   return collection;

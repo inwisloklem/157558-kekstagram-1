@@ -4,6 +4,8 @@ const MESSAGE =
 Accessible options:
 --${`author`.grey}         — ${`prints author info`.green}
 --${`description`.grey}    — ${`prints application description`.green}
+--${`generate`.grey}       — ${`generates file with data`.green}
+--${`fill`.grey}           — ${`fills database with data`.green}
 --${`help`.grey}           — ${`prints this info`.green}
 --${`license`.grey}        — ${`prints application license`.green}
 --${`server [port]`.grey}  — ${`starts local server`.green}

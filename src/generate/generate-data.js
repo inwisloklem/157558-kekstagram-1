@@ -2,7 +2,7 @@ const generateEntity = require(`./generate-entity`);
 
 const {
   pipe,
-  partial,
+  partialApply,
 } = require(`../utils`);
 
 const generateData = (fn, count) =>
@@ -11,7 +11,7 @@ const generateData = (fn, count) =>
 const formatData = (data) =>
   JSON.stringify(data, null, 2);
 
-const generateFormattedData = partial(pipe(generateData, formatData), generateEntity);
+const generateFormattedData = partialApply(pipe(generateData, formatData), generateEntity);
 
 module.exports = {
   generateData,

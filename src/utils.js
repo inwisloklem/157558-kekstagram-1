@@ -96,7 +96,7 @@ const log = ({message, type}) => {
 const pipe = (...fns) =>
   fns.reduce((f, g) => (...args) => g(f(...args)));
 
-const partial = (fn, ...currentArgs) =>
+const partialApply = (fn, ...currentArgs) =>
   (...laterArgs) =>
     fn(...currentArgs, ...laterArgs);
 
@@ -117,6 +117,6 @@ module.exports = {
   getRandomSubarray,
   log,
   pipe,
-  partial,
+  partialApply,
   prettyPrint,
 };

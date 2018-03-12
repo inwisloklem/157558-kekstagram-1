@@ -37,6 +37,8 @@ class PostController {
     const data = Object.assign({}, request.body);
     const image = request.file;
 
+    data.date = Date.now();
+
     if (image) {
       data.filename = {
         path: `/photos/${data.date}`,
@@ -171,7 +173,7 @@ class PostController {
     logger.info(Messages.OK, {details: {post}});
   }
 
-  handleCORS(request, response, next) {
+  static handleCORS(request, response, next) {
     response
         .header(`Access-Control-Allow-Origin`, `*`)
         .header(`Access-Control-Allow-Headers`, `Origin, X-Requested-With, Content-Type, Accept`);
@@ -179,14 +181,14 @@ class PostController {
     next();
   }
 
-  handleNotImplemented(request, response) {
+  static handleNotImplemented(request, response) {
     response.status(501);
     render(request, response, [Errors.NOT_IMPLEMENTED]);
 
     logger.info(Messages.NOT_IMPLEMENTED, {details: {url: request.url}});
   }
 
-  handleInternalServerError(exception, request, response, next) {
+  static handleInternalServerError(exception, request, response, next) {
     response.status(500);
     render(request, response, [Errors.INTERNAL_SERVER_ERROR]);
 

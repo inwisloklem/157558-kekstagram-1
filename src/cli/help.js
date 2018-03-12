@@ -1,5 +1,5 @@
 const MESSAGE =
-`This application generates data file by default.
+`${`Kekstagram server and command line utilities set.`.cyan.bold}
 
 Accessible options:
 --${`author`.grey}         — ${`prints author info`.green}

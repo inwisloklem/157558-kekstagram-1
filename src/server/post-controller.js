@@ -4,6 +4,14 @@ const logger = require(`./logger`);
 
 const render = require(`./render`);
 
+const {
+  async,
+  createStreamFromBuffer,
+} = require(`../utils`);
+
+const validate = require(`./validate`);
+const scheme = require(`./post-scheme`);
+
 const Messages = {
   OK: `Server responded 200 OK.`,
   OK_ACCEPTED: `Server responded 200 OK (accepted data).`,
@@ -13,14 +21,6 @@ const Messages = {
   NOT_IMPLEMENTED: `Server responded 501 Not Implemented.`,
   INTERNAL_SERVER_ERROR: `Server responded 500 Internal Server Error.`,
 };
-
-const {
-  async,
-  createStreamFromBuffer,
-} = require(`../utils`);
-
-const validate = require(`./validate`);
-const scheme = require(`./post-scheme`);
 
 class PostController {
   constructor(postStore, imageStore) {
@@ -111,7 +111,7 @@ class PostController {
     }
 
     const post = await this._postStore
-        .getPostByQuery({date: String(date)});
+        .getPostByQuery({date: Number(date)});
 
     if (!post) {
       response.status(404);
@@ -157,7 +157,7 @@ class PostController {
     }
 
     const post = await this._postStore
-        .getPostByQuery({date: String(date)});
+        .getPostByQuery({date: Number(date)});
 
     if (!post) {
       response.status(404);
